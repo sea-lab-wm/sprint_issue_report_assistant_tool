@@ -1,0 +1,1 @@
+BEE_v2 tool for bug report duplicate detection, severity prediction and bug localization

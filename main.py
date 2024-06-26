@@ -41,7 +41,8 @@ def api_git_msg():
                 issue_id = issue['number']
                 issue_title = issue['title']
                 issue_body = issue['body']
-                # embedding = calculate_embeddings(issue_body)
+                issue_labels = [label['name'] for label in issue.get('labels', [])]
+                print(issue_labels)
                 issue_url = issue['html_url']
 
                 if input_issue_title is None:
@@ -65,9 +66,11 @@ def api_git_msg():
                         "issue_id": issue_id,  
                         "issue_title": issue_title,  
                         "issue_url": issue_url,
+                        "issue_label": issue_labels,
                     })
 
             BRSeverity = SeverityPrediction(input_issue_data_for_model)
+
 
             # print(repo_full_name)
             # print(issue_number)

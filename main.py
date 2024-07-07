@@ -18,64 +18,75 @@ app = Flask(__name__)
 def api_git_msg():
     if request.headers['Content-Type'] == 'application/json':
         data = request.json
+        event = request.headers.get('X-GitHub-Event', '')
         action = data.get('action', '')
-        repo_full_name = data['repository']['full_name']
-        issue_number = data['issue']['number']
 
-        if action == 'opened':
-            issues_data = fetch_repository_issues(repo_full_name)
+        # get the repositories that the app was installed in
+        if event == 'installation' and action == 'created':
+            installation_repositories = data['repositories']
+            for repo in installation_repositories:
+                repo_full_name = repo['full_name']
+                print(f"GitHub App installed in repository: {repo_full_name}")
+            return "Installation event handled", 200
 
-            input_issue_title = issues_data[0]['title']
-            input_issue_body = issues_data[0]['body']
+        elif event == 'issues':
+            repo_full_name = data['repository']['full_name']
+            issue_number = data['issue']['number']
 
-            if input_issue_title is None:
-                input_issue_title = ""
-            if input_issue_body is None:
-                input_issue_body = ""
+            print(f"Action: {action}, Repository: {repo_full_name}, Issue Number: {issue_number}")
 
-            input_issue_data_for_model = input_issue_title + "\n" +  input_issue_body
+            if action == 'opened':
+                issues_data = fetch_repository_issues(repo_full_name)
 
-            duplicate_issue_list = []
-            
-            for issue in issues_data[1:]:
-                issue_id = issue['number']
-                issue_title = issue['title']
-                issue_body = issue['body']
-                issue_labels = [label['name'] for label in issue.get('labels', [])]
-                print(issue_labels)
-                issue_url = issue['html_url']
+                input_issue_title = issues_data[0]['title']
+                input_issue_body = issues_data[0]['body']
+
+                print(input_issue_title)
+                print(input_issue_body)
 
                 if input_issue_title is None:
-                    issue_title = ""
+                    input_issue_title = ""
                 if input_issue_body is None:
-                    issue_body = ""
+                    input_issue_body = ""
 
-                issue_data_for_model = issue_title + "\n" + issue_body
+                input_issue_data_for_model = input_issue_title + "\n" +  input_issue_body
 
-                # print("\n\n")
-                # print(input_issue_data_for_model)
-                # print(issue_data_for_model)
+                duplicate_issue_list = []
 
-                
-                duplicatePrediction = DuplicateDetection(input_issue_data_for_model, issue_data_for_model)
-                
-                # print(duplicatePrediction)
+                for issue in issues_data[1:]:
+                    issue_id = issue['number']
+                    issue_title = issue['title']
+                    issue_body = issue['body']
+                    issue_labels = [label['name'] for label in issue.get('labels', [])]
+                    print(issue_labels)
+                    issue_url = issue['html_url']
 
-                if duplicatePrediction == [1]:
-                    duplicate_issue_list.append({
-                        "issue_id": issue_id,  
-                        "issue_title": issue_title,  
-                        "issue_url": issue_url,
-                        "issue_label": issue_labels,
-                    })
+                    if input_issue_title is None:
+                        issue_title = ""
+                    if input_issue_body is None:
+                        issue_body = ""
 
-            BRSeverity = SeverityPrediction(input_issue_data_for_model)
+                    issue_data_for_model = issue_title + "\n" + issue_body
 
+                    duplicatePrediction = DuplicateDetection(input_issue_data_for_model, issue_data_for_model)
 
-            # print(repo_full_name)
-            # print(issue_number)
-            # print(duplicate_issue_list)
-            create_comment(repo_full_name, issue_number, duplicate_issue_list, BRSeverity)
+                    if duplicatePrediction == [1]:
+                        duplicate_issue_list.append({
+                            "issue_id": issue_id,  
+                            "issue_title": issue_title,  
+                            "issue_url": issue_url,
+                            "issue_label": issue_labels,
+                        })
+
+                BRSeverity = SeverityPrediction(input_issue_data_for_model)
+
+                create_comment(repo_full_name, issue_number, duplicate_issue_list, BRSeverity)
+
+            return "Issue event handled", 200
+        else:
+            return "Not a relevant event, no action required.", 200
+    else:
+        return "415 Unsupported Media Type ;)"
                     
 
 
@@ -106,10 +117,6 @@ def api_git_msg():
             #         issue_url = issue['html_url']
             #         insert_issue_to_db(issue_id, issue_title, issue_body, issue_url, embedding)
 
-        return "Not a new issue, no action required."
-    else:
-        return "415 Unsupported Media Type ;)"
-
 
 
 
@@ -119,3 +126,4 @@ if __name__ == '__main__':
 
 
 # ./ngrok http 5000
+# https://github.com/apps/sprint-issue-report-assistant

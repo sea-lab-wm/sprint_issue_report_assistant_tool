@@ -23,8 +23,7 @@ def create_comment(repo_full_name, issue_number, comment_text, BRSeverity):
         return
     
     
-    comment_body = f"Issue Severity: **{BRSeverity}**\n\n\n"
-    comment_body += create_similarity_string(comment_text)
+    comment_body = create_similarity_string(comment_text)
     
 
     create_label(repo_full_name, issue_number, "Duplicate")
@@ -46,9 +45,10 @@ def create_comment(repo_full_name, issue_number, comment_text, BRSeverity):
 
 
 def create_similarity_string(duplicateIssues):
-    similarity_string = "### The most similar issues are given below:\n\n"
+    similarity_string = "### The Most Similar Issues\n\n"
 
-    serial_number = 1
+    string_after_bug_localization = ""
+    
     for result in duplicateIssues:
         issue_id = result['issue_id']
         issue_title = result['issue_title']
@@ -64,11 +64,20 @@ def create_similarity_string(duplicateIssues):
             issue_label_str = 'No Severity Label Found'
         
         # Construct the string with Markdown syntax for headings and links
-        similarity_string += f"**{serial_number}.** 📝 [{issue_title}]({issue_url}) 📝 ⚠️ <code style='color: red;'>{issue_label_str}</code>\n\n"
-        
-        serial_number += 1
+        similarity_string += f"<code style='color: red;'>📝 [{issue_title}]({issue_url}) 📝 ⚠️<b>({issue_label_str})</b>⚠️</code>\n\n"
+        string_after_bug_localization = similarity_string
+    
+
+    similarity_string += "\n\n\n🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹\n"
+    similarity_string += "\n\n\n### The potential bug occuring files: \n\n"    
+
     
     return similarity_string
+
+
+
+def generateBugLocalizationComment(string_after_bug_localization):
+    string_after_bug_localization += "\n\n\n🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩#### The potential bug occuring files: 🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩\n\n"
 
 
 
@@ -158,12 +167,12 @@ def create_or_update_label(repo_full_name, label_name, label_color):
 
 def create_label(repo_full_name, issue_number, label_name):
     label_colors = {
-        'Duplicate': '008000',  # green
-        'Blocker': '8B0000',    # deep red
-        'Critical': 'FF6347',   # light red (Tomato)
+        'Duplicate': '6B8E23',  # olive
+        'Blocker': '880808',    # deep red
+        'Critical': 'D22B2B',   # cadmium red 
         'Major': 'A52A2A',      # brown
-        'Minor': 'FFFF00',      # deep yellow
-        'Trivial': '0000FF'     # blue
+        'Minor': 'CC5500',      # burnt orange
+        'Trivial': 'E97451'     # burnt sienna
     }
     
 

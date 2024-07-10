@@ -7,7 +7,9 @@ def fetch_repository_issues(repo_full_name):
     headers = {
         'Authorization': f'Bearer {private_key}',
     }
-    response = requests.get(issues_url, headers=headers)
+
+    response = requests.get(issues_url)
+
 
     if response.status_code == 200:
         issues_data = response.json()
@@ -15,6 +17,8 @@ def fetch_repository_issues(repo_full_name):
     else:
         print(f"Failed to fetch issues. Status code: {response.status_code}")
         return []
+
+        
 
 def get_issue_url(repo_full_name, issue_number):
     return f"https://github.com/{repo_full_name}/issues/{issue_number}"

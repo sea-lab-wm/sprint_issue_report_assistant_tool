@@ -14,7 +14,6 @@ def DuplicateDetection(sent1, sent2):
             )
 
     tokenized_inputs = tokenizer(sent1, sent2, padding="max_length", max_length=tokenizer.model_max_length, truncation=True, return_tensors="pt")
-    print(tokenized_inputs)
 
     inputs = {key: value.to(device) for key, value in tokenized_inputs.items()}
     model.to(device)
@@ -30,9 +29,9 @@ def DuplicateDetection(sent1, sent2):
 
 
 
-sent1 = "move propertysetmixin helper from comphelper into the public availbale cppuhelper"
-sent2 = "The OpenFormula draft changes B() to BINOM.DIST.RANGE()\nAdd BINOM.DIST.RANGE as an alias for B so documents of future releases can be\nread in this release. Do not write BINOM.DIST.RANGE in this release."
+# sent1 = "move propertysetmixin helper from comphelper into the public availbale cppuhelper"
+# sent2 = "The OpenFormula draft changes B() to BINOM.DIST.RANGE()\nAdd BINOM.DIST.RANGE as an alias for B so documents of future releases can be\nread in this release. Do not write BINOM.DIST.RANGE in this release."
 
-DuplicateDetection(sent1, sent2)
+# DuplicateDetection(sent1, sent2)
     
     

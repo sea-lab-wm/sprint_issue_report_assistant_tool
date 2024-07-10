@@ -1,55 +1,57 @@
 import os
 import requests
 from dotenv import load_dotenv
+from app_authentication import authenticate_github_app, get_installation_id, get_installation_access_token, generate_jwt
 
 load_dotenv()
 
 def create_comment(repo_full_name, issue_number, comment_text, BRSeverity):
     url = f'https://api.github.com/repos/{repo_full_name}/issues/{issue_number}/comments'
 
-    private_key = os.environ.get('GITHUB_PRIVATE_KEY')
+    # jwt_token = generate_jwt()
+    # installation_id = get_installation_id(repo_full_name, jwt_token)
+    # access_token = get_installation_access_token(installation_id, jwt_token)
 
-    if private_key is None:
-        raise ValueError("GitHub private key is not set in the .env file")
+    auth_token = authenticate_github_app(repo_full_name)
 
     headers = {
-        'Authorization': f'Bearer {private_key}',
-        'Accept': 'application/vnd.github+json',
-        'X-GitHub-Api-Version': '2022-11-28'
+        'Authorization': f'token {auth_token}',
+        'Accept': 'application/vnd.github.v3+json'
     }
 
-    # response_text = create_similarity_string(comment_text)
+    response_text = create_similarity_string(comment_text)
     if not comment_text:
         return
     
     
     comment_body = create_similarity_string(comment_text)
-    
 
-    create_label(repo_full_name, issue_number, "Duplicate")
-    create_label(repo_full_name, issue_number, BRSeverity)
+    print(comment_text)
 
-    data = {
+    payload = {
         'body': comment_body
     }
+    
+    response = requests.post(url, headers=headers, json=payload)
+    response.raise_for_status()
+    
 
-    response = requests.post(url, headers=headers, json=data)
-    print(response)
+    create_label(repo_full_name, issue_number, "Duplicate", auth_token)
+    create_label(repo_full_name, issue_number, BRSeverity, auth_token)
+
 
     if response.status_code == 201:
         print("Comment created successfully.")
     else:
-        print("Failed to create comment:", response.status_code, response.text)
+        print(response.text)
 
 
 
 
 def create_similarity_string(duplicateIssues):
-    similarity_string = "### The Most Similar Issues\n\n"
+    similarity_string = "### The Most Similar Issues:\n\n"
 
-    string_after_bug_localization = ""
-    
-    for result in duplicateIssues:
+    for idx, result in enumerate(duplicateIssues, start=1):
         issue_id = result['issue_id']
         issue_title = result['issue_title']
         issue_url = result['issue_url']
@@ -61,18 +63,15 @@ def create_similarity_string(duplicateIssues):
         if filtered_labels:
             issue_label_str = ', '.join(filtered_labels)
         else:
-            issue_label_str = 'No Severity Label Found'
+            issue_label_str = ''
         
         # Construct the string with Markdown syntax for headings and links
-        similarity_string += f"<code style='color: red;'>📝 [{issue_title}]({issue_url}) 📝 ⚠️<b>({issue_label_str})</b>⚠️</code>\n\n"
-        string_after_bug_localization = similarity_string
-    
+        similarity_string += f"📝 <b>{idx}. (#{issue_id}) [{issue_title}]({issue_url})</b> 📝 ⚠️<b>(<span style='color: red;'>{issue_label_str}</span>)</b>⚠️\n\n"
 
-    similarity_string += "\n\n\n🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹\n"
     similarity_string += "\n\n\n### The potential bug occuring files: \n\n"    
 
-    
     return similarity_string
+
 
 
 
@@ -110,16 +109,16 @@ def generateBugLocalizationComment(string_after_bug_localization):
 
 
 
-def add_label_to_issue(repo_full_name, issue_number, label_name):
+def add_label_to_issue(repo_full_name, issue_number, label_name, auth_token):
     url = f'https://api.github.com/repos/{repo_full_name}/issues/{issue_number}/labels'
     
-    private_key = os.environ.get('GITHUB_PRIVATE_KEY')
+    # private_key = os.environ.get('GITHUB_PRIVATE_KEY')
     
-    if private_key is None:
-        raise ValueError("GitHub private key is not set in the .env file")
+    # if private_key is None:
+    #     raise ValueError("GitHub private key is not set in the .env file")
     
     headers = {
-        'Authorization': f'Bearer {private_key}',
+        'Authorization': f'Bearer {auth_token}',
         'Accept': 'application/vnd.github.v3+json'
     }
     
@@ -136,16 +135,16 @@ def add_label_to_issue(repo_full_name, issue_number, label_name):
 
 
 
-def create_or_update_label(repo_full_name, label_name, label_color):
+def create_or_update_label(repo_full_name, label_name, label_color, auth_token):
     url = f'https://api.github.com/repos/{repo_full_name}/labels/{label_name}'
     
-    private_key = os.environ.get('GITHUB_PRIVATE_KEY')
+    # private_key = os.environ.get('GITHUB_PRIVATE_KEY')
     
-    if private_key is None:
-        raise ValueError("GitHub private key is not set in the .env file")
+    # if private_key is None:
+    #     raise ValueError("GitHub private key is not set in the .env file")
     
     headers = {
-        'Authorization': f'Bearer {private_key}',
+        'Authorization': f'Bearer {auth_token}',
         'Accept': 'application/vnd.github.v3+json'
     }
 
@@ -165,7 +164,7 @@ def create_or_update_label(repo_full_name, label_name, label_color):
 
 
 
-def create_label(repo_full_name, issue_number, label_name):
+def create_label(repo_full_name, issue_number, label_name, auth_token):
     label_colors = {
         'Duplicate': '6B8E23',  # olive
         'Blocker': '880808',    # deep red
@@ -178,5 +177,5 @@ def create_label(repo_full_name, issue_number, label_name):
 
     label_color = label_colors.get(label_name, '000000')  
     
-    create_or_update_label(repo_full_name, label_name, label_color)
-    add_label_to_issue(repo_full_name, issue_number, label_name)
+    create_or_update_label(repo_full_name, label_name, label_color, auth_token)
+    add_label_to_issue(repo_full_name, issue_number, label_name, auth_token)

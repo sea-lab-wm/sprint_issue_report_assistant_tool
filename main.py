@@ -24,9 +24,6 @@ def api_git_msg():
         # get the repositories that the app was installed in
         if event == 'installation' and action == 'created':
             installation_repositories = data['repositories']
-            for repo in installation_repositories:
-                repo_full_name = repo['full_name']
-                print(f"GitHub App installed in repository: {repo_full_name}")
             return "Installation event handled", 200
 
         elif event == 'issues':
@@ -41,8 +38,6 @@ def api_git_msg():
                 input_issue_title = issues_data[0]['title']
                 input_issue_body = issues_data[0]['body']
 
-                print(input_issue_title)
-                print(input_issue_body)
 
                 if input_issue_title is None:
                     input_issue_title = ""

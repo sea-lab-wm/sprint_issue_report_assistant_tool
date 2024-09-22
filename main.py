@@ -7,6 +7,8 @@ from getAllIssues import fetch_repository_issues
 from textModel import calculate_embeddings, calculate_similarity
 from dupBRDetection import DuplicateDetection
 from BRSeverityPred import SeverityPrediction
+from getCodeFiles import fetch_all_code_files
+from createCommentBugLocalization import CreateCommentBL
 
 app = Flask(__name__)
 
@@ -34,6 +36,8 @@ def api_git_msg():
 
             if action == 'opened':
                 issues_data = fetch_repository_issues(repo_full_name)
+                code_files = fetch_all_code_files(repo_full_name)
+
 
                 input_issue_title = issues_data[0]['title']
                 input_issue_body = issues_data[0]['body']
@@ -76,6 +80,7 @@ def api_git_msg():
                 BRSeverity = SeverityPrediction(input_issue_data_for_model)
 
                 create_comment(repo_full_name, issue_number, duplicate_issue_list, BRSeverity)
+                CreateCommentBL(repo_full_name, issue_number, code_files)
 
             return "Issue event handled", 200
         else:
@@ -122,3 +127,4 @@ if __name__ == '__main__':
 
 # ./ngrok http 5000
 # https://github.com/apps/sprint-issue-report-assistant
+# .env file ta add kora lagbe

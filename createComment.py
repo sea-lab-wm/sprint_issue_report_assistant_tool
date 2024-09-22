@@ -1,7 +1,7 @@
 import os
 import requests
 from dotenv import load_dotenv
-from app_authentication import authenticate_github_app, get_installation_id, get_installation_access_token, generate_jwt
+from app_authentication import authenticate_github_app
 
 load_dotenv()
 
@@ -67,8 +67,7 @@ def create_similarity_string(duplicateIssues):
         
         # Construct the string with Markdown syntax for headings and links
         similarity_string += f"📝 <b>{idx}. (#{issue_id}) [{issue_title}]({issue_url})</b> 📝 ⚠️<b>(<span style='color: red;'>{issue_label_str}</span>)</b>⚠️\n\n"
-
-    similarity_string += "\n\n\n### The potential bug occuring files: \n\n"    
+  
 
     return similarity_string
 

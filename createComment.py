@@ -19,7 +19,6 @@ def create_comment(repo_full_name, issue_number, comment_text, BRSeverity):
         'Accept': 'application/vnd.github.v3+json'
     }
 
-    response_text = create_similarity_string(comment_text)
     if not comment_text:
         return
     
@@ -49,7 +48,7 @@ def create_comment(repo_full_name, issue_number, comment_text, BRSeverity):
 
 
 def create_similarity_string(duplicateIssues):
-    similarity_string = "### The Most Similar Issues:\n\n"
+    similarity_string = "### Most Similar Issues:\n\n"
 
     for idx, result in enumerate(duplicateIssues, start=1):
         issue_id = result['issue_id']
@@ -58,16 +57,19 @@ def create_similarity_string(duplicateIssues):
         issue_label = result['issue_label']
         
         # Filter out the 'duplicate' label and convert the list to a comma-separated string, or use 'No labels' if empty
-        filtered_labels = [label for label in issue_label if label != 'duplicate']
+        filtered_labels = [label for label in issue_label if label.lower() != 'duplicate']
         
         if filtered_labels:
             issue_label_str = ', '.join(filtered_labels)
         else:
-            issue_label_str = ''
+            issue_label_str = 'No Severity Labels found'
+
+        # Add warning symbols around the label string
+        issue_label_str = f"❗❗ <b>({issue_label_str})</b> ❗❗"
         
         # Construct the string with Markdown syntax for headings and links
-        similarity_string += f"📝 <b>{idx}. (#{issue_id}) [{issue_title}]({issue_url})</b> 📝 ⚠️<b>(<span style='color: red;'>{issue_label_str}</span>)</b>⚠️\n\n"
-  
+        similarity_string += f"<b>{idx}. (#{issue_id}) [{issue_title}]({issue_url})</b> 🐛  &nbsp;&nbsp; "
+        similarity_string += f"  {issue_label_str}\n\n"
 
     return similarity_string
 
@@ -165,7 +167,7 @@ def create_or_update_label(repo_full_name, label_name, label_color, auth_token):
 
 def create_label(repo_full_name, issue_number, label_name, auth_token):
     label_colors = {
-        'Duplicate': '6B8E23',  # olive
+        'Duplicate': '33ffa8',  # olive
         'Blocker': '880808',    # deep red
         'Critical': 'D22B2B',   # cadmium red 
         'Major': 'A52A2A',      # brown
@@ -178,3 +180,7 @@ def create_label(repo_full_name, issue_number, label_name, auth_token):
     
     create_or_update_label(repo_full_name, label_name, label_color, auth_token)
     add_label_to_issue(repo_full_name, issue_number, label_name, auth_token)
+
+
+
+    # ⚠️<b>(<span style='color: red;'>{issue_label_str}</span>)</b>⚠️

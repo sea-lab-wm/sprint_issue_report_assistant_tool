@@ -32,7 +32,7 @@ def CreateCommentBL(repo_full_name, issue_number, code_files):
     formatted_code_files = ""
     for idx, file in enumerate(top_files, start=1):
         file_name = file['path'].split('/')[-1]  
-        formatted_code_files += f"<b>{idx}. [{file_name}]({file['url']})</b>  &nbsp;&nbsp; :dependabot:\n\n"
+        formatted_code_files += f"<b>{idx}. [{file_name}]({file['url']})</b>  &nbsp;&nbsp; \n\n"
 
   
     comment_body = "### Potential Buggy Files: \n\n" + formatted_code_files

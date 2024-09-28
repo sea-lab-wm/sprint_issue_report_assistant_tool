@@ -68,7 +68,7 @@ def create_similarity_string(duplicateIssues):
         issue_label_str = f"❗❗ <b>({issue_label_str})</b> ❗❗"
         
         # Construct the string with Markdown syntax for headings and links
-        similarity_string += f"<b>{idx}. (#{issue_id}) [{issue_title}]({issue_url})</b> 🐛  &nbsp;&nbsp; "
+        similarity_string += f"<b>{idx}. (#{issue_id}) [{issue_title}]({issue_url})</b>  &nbsp;&nbsp; "
         similarity_string += f"  {issue_label_str}\n\n"
 
     return similarity_string

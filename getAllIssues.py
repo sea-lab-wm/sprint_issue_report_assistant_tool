@@ -15,11 +15,8 @@ def fetch_repository_issues(repo_full_name):
     per_page = 50  
     max_pages = 100  
 
-    print('dhuke 1')
-
     while page <= max_pages: 
         # Add pagination parameters to the request
-        print('dhuke 2')
         params = {
             'page': page,
             'per_page': per_page

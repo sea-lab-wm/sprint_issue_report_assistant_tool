@@ -1,24 +1,58 @@
-import requests, os
+import requests, os, time
+from app_authentication import authenticate_github_app
 
-# Function to fetch issues from a GitHub repository
+# Function to fetch issues from a GitHub repository with pagination
 def fetch_repository_issues(repo_full_name):
-    private_key = os.environ.get('GITHUB_PRIVATE_KEY')
+    auth_token = authenticate_github_app(repo_full_name)
     issues_url = f"https://api.github.com/repos/{repo_full_name}/issues"
     headers = {
-        'Authorization': f'Bearer {private_key}',
+        'Authorization': f'token {auth_token}',
+        'Accept': 'application/vnd.github.v3+json'
     }
 
-    response = requests.get(issues_url)
+    issues_data = []
+    page = 1
+    per_page = 50  
+    max_pages = 100  
 
+    print('dhuke 1')
 
-    if response.status_code == 200:
-        issues_data = response.json()
-        return issues_data
-    else:
-        print(f"Failed to fetch issues. Status code: {response.status_code}")
-        return []
+    while page <= max_pages: 
+        # Add pagination parameters to the request
+        print('dhuke 2')
+        params = {
+            'page': page,
+            'per_page': per_page
+        }
 
+        try:
+            response = requests.get(issues_url, headers=headers, params=params)
+        except requests.exceptions.RequestException as e:
+            print(f"An error occurred: {e}")
+            return
         
 
-def get_issue_url(repo_full_name, issue_number):
-    return f"https://github.com/{repo_full_name}/issues/{issue_number}"
+        if response.status_code == 200:
+            issues_page_data = response.json()
+            
+            # Break if no more issues are returned
+            if not issues_page_data:
+                print(f"Fetched all issues. Total issues fetched: {len(issues_data)}")
+                break
+
+            issues_data.extend(issues_page_data)
+            print(f"Page {page} fetched. Total issues so far: {len(issues_data)}")
+
+            page += 1
+
+        elif response.status_code == 403:  
+            reset_time = int(response.headers.get('X-RateLimit-Reset', time.time()))
+            sleep_time = max(0, reset_time - time.time())
+            print(f"Rate limit exceeded. Sleeping for {sleep_time} seconds...")
+            time.sleep(sleep_time)
+        else:
+            print(f"Failed to fetch issues. Status code: {response.status_code}")
+            print(f"Response: {response.json()}")
+            break
+
+    return issues_data

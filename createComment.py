@@ -8,9 +8,6 @@ load_dotenv()
 def create_comment(repo_full_name, issue_number, comment_text, BRSeverity):
     url = f'https://api.github.com/repos/{repo_full_name}/issues/{issue_number}/comments'
 
-    # jwt_token = generate_jwt()
-    # installation_id = get_installation_id(repo_full_name, jwt_token)
-    # access_token = get_installation_access_token(installation_id, jwt_token)
 
     auth_token = authenticate_github_app(repo_full_name)
 
@@ -55,10 +52,17 @@ def create_similarity_string(duplicateIssues):
         issue_title = result['issue_title']
         issue_url = result['issue_url']
         issue_label = result['issue_label']
-        
-        # Filter out the 'duplicate' label and convert the list to a comma-separated string, or use 'No labels' if empty
-        filtered_labels = [label for label in issue_label if label.lower() != 'duplicate']
-        
+
+        print(issue_label)
+
+        # Split the issue_label string by commas and strip any whitespace
+        labels = [label.strip() for label in issue_label.split(',')]
+
+        # Filter out the 'Duplicate' label (case insensitive)
+        filtered_labels = [label for label in labels if label.lower() != 'duplicate']
+        print(filtered_labels)
+
+        # Create the string for the remaining labels or default message
         if filtered_labels:
             issue_label_str = ', '.join(filtered_labels)
         else:
@@ -66,8 +70,9 @@ def create_similarity_string(duplicateIssues):
 
         # Add warning symbols around the label string
         issue_label_str = f"❗❗ <b>({issue_label_str})</b> ❗❗"
+
         
-        # Construct the string with Markdown syntax for headings and links
+
         similarity_string += f"<b>{idx}. (#{issue_id}) [{issue_title}]({issue_url})</b>  &nbsp;&nbsp; "
         similarity_string += f"  {issue_label_str}\n\n"
 

@@ -1,66 +1,82 @@
-from sqlalchemy.exc import OperationalError
-from models import BugReport
-from db_config import db
-import json
+import sqlite3
+from datetime import datetime
 
-class BugReportObject:
-    def __init__(self, issueId, issueTitle, issueBody, issueURL, embedding):
-        self.issueId = issueId
-        self.issueTitle = issueTitle
-        self.issueBody = issueBody
-        self.issueURL = issueURL
-        self.embedding = embedding
+def connect_db():
+    conn = sqlite3.connect('issues.db')
+    return conn
 
+def create_table_if_not_exists(repo_full_name):
+    conn = connect_db()
+    cur = conn.cursor()
 
+    query = f"""
+    CREATE TABLE IF NOT EXISTS "{repo_full_name}" (
+        issue_id INTEGER PRIMARY KEY,
+        issue_title TEXT NOT NULL,
+        issue_body TEXT,
+        created_at DATETIME NOT NULL,
+        issue_url TEXT,
+        issue_labels TEXT
+    );
+    """
+    cur.execute(query)
+    conn.commit()
+    conn.close()
 
-def is_bug_report_table_empty():
-    try:
-        first_bug_report = BugReport.query.first()
-        return first_bug_report is None
-    except OperationalError:
-        return True
+def is_table_exists(repo_full_name):
+    conn = connect_db()
+    cur = conn.cursor()
+
+    query = f"SELECT name FROM sqlite_master WHERE type='table' AND name='{repo_full_name}';"
+    cur.execute(query)
+    result = cur.fetchone()
+    conn.close()
+    return result is not None
+
+def insert_issue_to_db(repo_full_name, issue_id, issue_title, issue_body, created_at, issue_url, issue_labels):
+    print(issue_labels)
+    conn = connect_db()
+    cur = conn.cursor()
+
+    if isinstance(created_at, datetime):
+        created_at = created_at.strftime('%Y-%m-%d %H:%M:%S')
+
+    issue_labels_str = ','.join(issue_labels)
+
+    query = f"""
+    INSERT INTO "{repo_full_name}" (issue_id, issue_title, issue_body, created_at, issue_url, issue_labels)
+    VALUES (?, ?, ?, ?, ?, ?);
+    """
+    cur.execute(query, (issue_id, issue_title, issue_body, created_at, issue_url, issue_labels_str))
+    conn.commit()
+    conn.close()
+
+    print(f'Issue {issue_id} inserted successfully in table {repo_full_name}')
+
+def fetch_all_bug_reports_from_db(repo_full_name):
+    conn = connect_db()
+    cur = conn.cursor()
+
+    query = f"SELECT * FROM '{repo_full_name}';"
+    cur.execute(query)
+    issues = cur.fetchall()
+    conn.close()
+    return issues
+
+def delete_issue_from_db(repo_full_name, issue_id):
+    conn = connect_db()
+    cur = conn.cursor()
+
+    query = f"DELETE FROM '{repo_full_name}' WHERE issue_id = ?;"
     
-
-
-def insert_issue_to_db(issue_id, issue_title, issue_body, issue_url, embedding):
     try:
-        embedding_list = embedding.tolist()
-        embedding_json = json.dumps(embedding_list)
-
-        bug_report = BugReport(
-            issueId=issue_id,
-            issueTitle=issue_title,
-            issueBody=issue_body,
-            issueURL=issue_url,
-            embedding=embedding_json
-        )
-
-        db.session.add(bug_report)
-        db.session.commit()
-        print('post success')
-        return True
+        cur.execute(query, (issue_id,))
+        conn.commit()
+        if cur.rowcount > 0:
+            print(f'Issue {issue_id} deleted successfully from table {repo_full_name}')
+        else:
+            print(f'Issue {issue_id} not found in table {repo_full_name}')
     except Exception as e:
-        print(f"Error inserting data into the database: {str(e)}")
-        return False
-    
-
-
-def fetch_all_bug_reports():
-    print('fetching bug reports')
-    try:
-        bug_reports = BugReport.query.all()
-        bug_report_objects = []
-
-        for bug_report in bug_reports:
-            bug_report_objects.append(BugReportObject(
-                issueId=bug_report.issueId,
-                issueTitle=bug_report.issueTitle,
-                issueBody=bug_report.issueBody,
-                issueURL=bug_report.issueURL,
-                embedding=bug_report.embedding
-            ))
-
-        return bug_report_objects
-    except Exception as e:
-        print(f"Error fetching bug reports from the database: {str(e)}")
-        return []
+        print(f"Error occurred while deleting issue: {e}")
+    finally:
+        conn.close()

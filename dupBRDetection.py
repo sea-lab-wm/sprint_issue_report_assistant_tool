@@ -29,9 +29,5 @@ def DuplicateDetection(sent1, sent2):
 
 
 
-# sent1 = "move propertysetmixin helper from comphelper into the public availbale cppuhelper"
-# sent2 = "The OpenFormula draft changes B() to BINOM.DIST.RANGE()\nAdd BINOM.DIST.RANGE as an alias for B so documents of future releases can be\nread in this release. Do not write BINOM.DIST.RANGE in this release."
 
-# DuplicateDetection(sent1, sent2)
-    
     

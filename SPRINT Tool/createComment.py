@@ -43,9 +43,9 @@ def create_comment(repo_full_name, issue_number, comment_text, BRSeverity):
 
 
 
-
 def create_similarity_string(duplicateIssues):
-    similarity_string = "### Most Similar Issues:\n\n"
+    # Simple title using HTML and Markdown-like formatting for emphasis
+    similarity_string = "## 🎯 Similar Issues:\n"
 
     for idx, result in enumerate(duplicateIssues, start=1):
         issue_id = result['issue_id']
@@ -53,61 +53,30 @@ def create_similarity_string(duplicateIssues):
         issue_url = result['issue_url']
         issue_label = result['issue_label']
 
-        print(issue_label)
-
         labels = [label.strip() for label in issue_label.split(',')]
+        filtered_labels = [label for label in labels if label.lower() != 'duplicate' and label.strip()]
 
-        filtered_labels = [label for label in labels if label.lower() != 'duplicate']
-        print(filtered_labels)
-
+        # If there are filtered labels, join them; otherwise, display 'No Label Found'
         if filtered_labels:
-            issue_label_str = ', '.join(filtered_labels)
+            issue_label_str_values = ', '.join(filtered_labels)
+            issue_label_str = f"<b>({issue_label_str_values})</b>"
         else:
-            issue_label_str = 'No Severity Labels found'
+            issue_label_str = " <b>(No Label found)</b>"
 
-        issue_label_str = f"❗❗ <b>({issue_label_str})</b> ❗❗"
-
-        
-
-        similarity_string += f"<b>{idx}. (#{issue_id}) [{issue_title}]({issue_url})</b>  &nbsp;&nbsp; "
-        similarity_string += f"  {issue_label_str}\n\n"
+        # Use <code> tags and HTML for consistent formatting
+        similarity_string += (
+            f"### "
+            f"<code style='display: block; border: 1px solid #ddd; border-radius: 5px; "
+            f"margin: 10px 0; padding: 10px; font-size: 16px;'>"
+            f"<b> <a href='{issue_url}' style='text-decoration: none;'>📝  <b>#{issue_id}</b> - {issue_title}</b></a>"
+            f"{issue_label_str}"
+            f"</code>"
+            f"<hr>\n"  # Add a horizontal line for separation
+        )
 
     return similarity_string
 
 
-
-
-def generateBugLocalizationComment(string_after_bug_localization):
-    string_after_bug_localization += "\n\n\n🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩#### The potential bug occuring files: 🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩🚩\n\n"
-
-
-
-# def create_label(repo_full_name, issue_number, labelName):
-#     url = f'https://api.github.com/repos/{repo_full_name}/issues/{issue_number}/labels'
-
-#     private_key = os.environ.get('GITHUB_PRIVATE_KEY')
-
-#     if private_key is None:
-#         raise ValueError("GitHub private key is not set in the .env file")
-
-#     headers = {
-#         'Authorization': f'Bearer {private_key}',
-#         'Accept': 'application/vnd.github.v3+json',
-#         'X-GitHub-Api-Version': '2022-11-28'
-#     }
-
-#     label_name = labelName
-
-#     data = {
-#         'labels': [label_name]
-#     }
-
-#     response = requests.post(url, headers=headers, json=data)
-
-#     if response.status_code == 201 or response.status_code == 200:
-#         print(f"Label '{label_name}' created successfully on issue #{issue_number}.")
-#     else:
-#         print(f"Failed to create label '{label_name}':", response.status_code, response.text)
 
 
 
@@ -185,3 +154,11 @@ def create_label(repo_full_name, issue_number, label_name, auth_token):
 
 
     # ⚠️<b>(<span style='color: red;'>{issue_label_str}</span>)</b>⚠️
+
+
+
+# similarity_string += (
+#             f"🔗 **(#{issue_id}) "
+#             f"[{issue_title}]({issue_url})** &nbsp;&nbsp;&nbsp; **{issue_label_str}**\n\n"
+#             "---\n"  # Horizontal line to separate each issue visually
+#         )

@@ -55,20 +55,16 @@ def create_similarity_string(duplicateIssues):
 
         print(issue_label)
 
-        # Split the issue_label string by commas and strip any whitespace
         labels = [label.strip() for label in issue_label.split(',')]
 
-        # Filter out the 'Duplicate' label (case insensitive)
         filtered_labels = [label for label in labels if label.lower() != 'duplicate']
         print(filtered_labels)
 
-        # Create the string for the remaining labels or default message
         if filtered_labels:
             issue_label_str = ', '.join(filtered_labels)
         else:
             issue_label_str = 'No Severity Labels found'
 
-        # Add warning symbols around the label string
         issue_label_str = f"❗❗ <b>({issue_label_str})</b> ❗❗"
 
         

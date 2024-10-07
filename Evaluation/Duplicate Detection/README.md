@@ -3,7 +3,7 @@
 This is the README.md file for replicating the fine-tuning for dup br detection of the RepresentThemAll model. All the credit for the dataset and the model fine-tuning code go to them. We just adjusted some things and replicated their work.
 
 ```bash
-bash run_dup_br_detection.sh
+bash run_dup_br_fine_tune.sh
 ```
 
 Note that you should replace the input of the following three parameters with the path that you store the [dataset](https://drive.google.com/drive/folders/1gPnZbgOO4XiBBsyF27jS--XwhHaInxlQ):
@@ -15,22 +15,21 @@ Note that you should replace the input of the following three parameters with th
 ### Results
 We ran the fine-tuned RTA model on their test dataset and got the following evaluation results:
 
+
 ### Test Data Overview
 
-| Metric                         | Value  |
-|---------------------------------|--------|
-| **Number of Test Data**         | 15,288 |
-| **Number of Duplicates**        | 11,088 |
-| **Number of Non-duplicates**    | 4,200  |
+| Metric                        | Value                                        |
+|--------------------------------|----------------------------------------------|
+| **Number of Test Data**        | 15,510                                       |
+| **Classification Labels**      | Trivial, Minor, Major, Critical, Blocker     |
 
 ### Evaluation Results
 
-| Metric      | Value     |
-|-------------|-----------|
-| **Accuracy**| 97.3051%  |
-| **Precision**| 97.4576% |
-| **Recall**  | 98.8637%  |
-
+| Metric       | Value     |
+|--------------|-----------|
+| **Accuracy** | 65.5899%  |
+| **Precision**| 66.2795%  |
+| **Recall**   | 65.5899%  |
 
 
 

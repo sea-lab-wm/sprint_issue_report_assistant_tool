@@ -5,7 +5,7 @@ from app_authentication import authenticate_github_app
 
 load_dotenv()
 
-def create_comment(repo_full_name, issue_number, comment_text, BRSeverity):
+def create_comment(repo_full_name, issue_number, comment_text):
     url = f'https://api.github.com/repos/{repo_full_name}/issues/{issue_number}/comments'
 
 
@@ -33,7 +33,7 @@ def create_comment(repo_full_name, issue_number, comment_text, BRSeverity):
     
 
     create_label(repo_full_name, issue_number, "Duplicate", auth_token)
-    create_label(repo_full_name, issue_number, BRSeverity, auth_token)
+    # create_label(repo_full_name, issue_number, BRSeverity, auth_token)
 
 
     if response.status_code == 201:
@@ -44,7 +44,6 @@ def create_comment(repo_full_name, issue_number, comment_text, BRSeverity):
 
 
 def create_similarity_string(duplicateIssues):
-    # Simple title using HTML and Markdown-like formatting for emphasis
     similarity_string = "## 🎯 Similar Issues:\n"
 
     for idx, result in enumerate(duplicateIssues, start=1):
@@ -56,14 +55,12 @@ def create_similarity_string(duplicateIssues):
         labels = [label.strip() for label in issue_label.split(',')]
         filtered_labels = [label for label in labels if label.lower() != 'duplicate' and label.strip()]
 
-        # If there are filtered labels, join them; otherwise, display 'No Label Found'
         if filtered_labels:
             issue_label_str_values = ', '.join(filtered_labels)
             issue_label_str = f"<b>({issue_label_str_values})</b>"
         else:
             issue_label_str = " <b>(No Label found)</b>"
 
-        # Use <code> tags and HTML for consistent formatting
         similarity_string += (
             f"### "
             f"<code style='display: block; border: 1px solid #ddd; border-radius: 5px; "
@@ -71,7 +68,7 @@ def create_similarity_string(duplicateIssues):
             f"<b> <a href='{issue_url}' style='text-decoration: none;'>📝  <b>#{issue_id}</b> - {issue_title}</b></a>"
             f"{issue_label_str}"
             f"</code>"
-            f"<hr>\n"  # Add a horizontal line for separation
+            f"<hr>\n"  
         )
 
     return similarity_string
@@ -82,11 +79,7 @@ def create_similarity_string(duplicateIssues):
 
 def add_label_to_issue(repo_full_name, issue_number, label_name, auth_token):
     url = f'https://api.github.com/repos/{repo_full_name}/issues/{issue_number}/labels'
-    
-    # private_key = os.environ.get('GITHUB_PRIVATE_KEY')
-    
-    # if private_key is None:
-    #     raise ValueError("GitHub private key is not set in the .env file")
+
     
     headers = {
         'Authorization': f'Bearer {auth_token}',
@@ -108,11 +101,7 @@ def add_label_to_issue(repo_full_name, issue_number, label_name, auth_token):
 
 def create_or_update_label(repo_full_name, label_name, label_color, auth_token):
     url = f'https://api.github.com/repos/{repo_full_name}/labels/{label_name}'
-    
-    # private_key = os.environ.get('GITHUB_PRIVATE_KEY')
-    
-    # if private_key is None:
-    #     raise ValueError("GitHub private key is not set in the .env file")
+
     
     headers = {
         'Authorization': f'Bearer {auth_token}',

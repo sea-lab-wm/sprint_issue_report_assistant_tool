@@ -11,16 +11,13 @@ def fetch_all_code_files(repo_full_name, branch='main'):
         'Accept': 'application/vnd.github.v3+json'
     }
 
-    # Step 2: Make the API request to get the repository tree
     response = requests.get(url, headers=headers)
     if response.status_code != 200:
         print(f"Error fetching repository tree: {response.status_code} - {response.text}")
         return []
 
-    # Step 3: Extract the list of files (blobs) from the response
     tree_data = response.json().get('tree', [])
     
-    # Step 4: Filter out files (blobs) and collect their paths and URLs
     code_files = []
     for item in tree_data:
         if item['type'] == 'blob':  

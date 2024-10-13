@@ -1,5 +1,7 @@
 import os
 import torch
+import re
+import ast
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
@@ -38,26 +40,47 @@ def BugLocalization(issue_data, repo_full_name, code_files_list):
             return_dict=True,
         )
 
-        # Load the Peft/Lora model
+        
         model = PeftModel.from_pretrained(model, peft_model_id)
 
-        # Reload tokenizer to save it
         tokenizer = AutoTokenizer.from_pretrained(config.base_model_name_or_path, trust_remote_code=True)
         tokenizer.pad_token = tokenizer.eos_token
         tokenizer.padding_side = "right"
 
-        # Run text generation pipeline with our next model
         prompt = (
-            f"I have the following issue information for repository {repo_full_name}: {issue_data}. "
+            f"I have the following issue information for repository {repo_full_name}: "
+            f"Issue Data: {issue_data}\n\n"
             f"The path list for all the code files are given below: {code_files_list}. "
             "Now based on the issue information and the file paths, find me the potential buggy code files. "
-            "In your response output, only give the paths for the potential buggy code files as a list. "
+            "In your response output, only give the paths for the potential buggy code files as a list. Make sure to give the full path (as given in url). "
             "Don't give anything else in output."
         )
 
-        pipe = pipeline(task="text-generation", model=model, tokenizer=tokenizer, max_length=200)
+
+        pipe = pipeline(task="text-generation", model=model, tokenizer=tokenizer, max_length=2048)
         result = pipe(f"<s>[INST] {prompt} [/INST]")
-        print(result[0]['generated_text'])
+        generated_text = result[0]['generated_text']
+        print('------------------------')
+        generated_only = generated_text.split("[/INST]")[-1].strip()
+        print(generated_only)
+        
+        list_pattern = r'\[.*?\]'
+        match = re.search(list_pattern, generated_only)
+
+        if match:
+            list_str = match.group()  
+            try:
+                generated_list = ast.literal_eval(list_str)
+                if isinstance(generated_list, list):
+                    print("Converted list:", generated_list)
+                    return generated_list
+                else:
+                    print("The extracted part is not a list.")
+                    return []
+            except (ValueError, SyntaxError) as e:
+                 print("Error converting the string to a list:", e)
+        else:
+            print("No list found in the generated output.")
 
     except Exception as e:
         print(f"An error occurred: {str(e)}")

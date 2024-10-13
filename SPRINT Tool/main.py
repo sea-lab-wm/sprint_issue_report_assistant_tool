@@ -3,10 +3,23 @@ from concurrent.futures import ThreadPoolExecutor
 from processIssueEvents import process_issue_event
 from getAllIssues import fetch_repository_issues
 from dbOperations import insert_issue_to_db
+import platform
+import multiprocessing
+import torch
 
+
+cuda_available = torch.cuda.is_available()
+os_name = platform.system()
+
+
+if os_name == 'Linux' and cuda_available:
+    multiprocessing.set_start_method('spawn', force=True)
+elif os_name == 'Windows':
+    multiprocessing.set_start_method('spawn', force=True)
 
 app = Flask(__name__)
 executor = ThreadPoolExecutor(max_workers=4)  
+
 
 @app.route('/', methods=['POST'])
 def api_git_msg():

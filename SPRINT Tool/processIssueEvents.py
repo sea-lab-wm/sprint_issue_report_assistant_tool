@@ -49,8 +49,8 @@ def process_issue_event(repo_full_name, input_issue, action):
 
             code_files = fetch_all_code_files(repo_full_name)
 
-            input_issue_title = input_issue['issue_title']
-            input_issue_body = input_issue['issue_body']
+            input_issue_title = input_issue['issue_title'] or ""
+            input_issue_body = input_issue['issue_body'] or ""
             input_issue_data_for_model = input_issue_title + "\n" + input_issue_body
 
             issue_chunks = chunkify(issues_data, 4)

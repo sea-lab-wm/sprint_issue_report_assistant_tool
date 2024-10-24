@@ -3,7 +3,6 @@ import requests
 from dotenv import load_dotenv
 from app_authentication import authenticate_github_app
 
-
 def CreateCommentBL(repo_full_name, issue_number, code_files):
     url = f'https://api.github.com/repos/{repo_full_name}/issues/{issue_number}/comments'
     auth_token = authenticate_github_app(repo_full_name)
@@ -13,12 +12,19 @@ def CreateCommentBL(repo_full_name, issue_number, code_files):
         'Accept': 'application/vnd.github.v3+json'
     }
 
-
     if not code_files:
         return
 
+    # Filter out README.md and .txt files
+    filtered_code_files = [
+        file for file in code_files 
+        if not (file.lower().endswith('readme.md') or file.lower().endswith('.txt'))
+    ]
 
-    top_files = code_files[:5]
+    if not filtered_code_files:
+        return
+
+    top_files = filtered_code_files[:5]
 
     if not top_files:
         return

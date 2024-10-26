@@ -1,7 +1,8 @@
 import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, AutoModel
 
-def DuplicateDetection(sent1, sent2):
+def DuplicateDetection(sent1, sent2, issue_id):
+    print(f"----------------analyzing issue: {issue_id}")
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     tokenizer = AutoTokenizer.from_pretrained("Colorful/RTA")

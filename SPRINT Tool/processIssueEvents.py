@@ -20,6 +20,11 @@ def process_issue_event(repo_full_name, input_issue, action):
 
                 issues_data = fetch_repository_issues(repo_full_name)
                 for issue in issues_data:
+
+                    if issue['number'] == input_issue['issue_number']:
+                        print(f"Skipping issue {issue['number']} as it matches the input issue title.")
+                        continue  
+
                     issue_id = issue['number']
                     issue_title = issue['title'] or ""
                     issue_body = issue['body'] or ""
@@ -34,18 +39,6 @@ def process_issue_event(repo_full_name, input_issue, action):
                 print(f"Table for {repo_full_name} already exists. Fetching issues from the database.")
                 issues_data = fetch_all_bug_reports_from_db(repo_full_name)
 
-                try:
-                    insert_issue_to_db(
-                        repo_full_name,
-                        input_issue['issue_number'],
-                        input_issue['issue_title'],
-                        input_issue['issue_body'],
-                        input_issue['created_at'],
-                        input_issue['issue_url'],
-                        input_issue['issue_labels']
-                    )
-                except Exception as e:
-                    print(f"An error occurred while inserting the issue: {e}")
 
             code_files = fetch_all_code_files(repo_full_name)
 
@@ -65,6 +58,20 @@ def process_issue_event(repo_full_name, input_issue, action):
 
             duplicate_issue_list = [issue for result in results for issue in result]
 
+            try:
+                    insert_issue_to_db(
+                        repo_full_name,
+                        input_issue['issue_number'],
+                        input_issue['issue_title'],
+                        input_issue['issue_body'],
+                        input_issue['created_at'],
+                        input_issue['issue_url'],
+                        input_issue['issue_labels']
+                    )
+                    
+            except Exception as e:
+                print(f"An error occurred while inserting the issue: {e}")
+
             auth_token = authenticate_github_app(repo_full_name)
 
             # Severity Prediction
@@ -76,9 +83,9 @@ def process_issue_event(repo_full_name, input_issue, action):
                 create_comment(repo_full_name, input_issue['issue_number'], duplicate_issue_list)
             
             # Bug localization comment
-            if code_files:
-                 buggy_code_files_list = BugLocalization(input_issue_data_for_model, repo_full_name, code_files)
-                 CreateCommentBL(repo_full_name, input_issue['issue_number'], buggy_code_files_list)
+            # if code_files:
+            #      buggy_code_files_list = BugLocalization(input_issue_data_for_model, repo_full_name, code_files)
+            #      CreateCommentBL(repo_full_name, input_issue['issue_number'], buggy_code_files_list)
         
         elif action == 'deleted':
             delete_issue_from_db(repo_full_name, input_issue['issue_number'])
@@ -95,7 +102,6 @@ def chunkify(lst, n):
 
 def process_issues_chunk(input_issue_data_for_model, issues_chunk):
     duplicate_issue_list = []
-    
     process_name = multiprocessing.current_process().name
 
     for issue in issues_chunk:
@@ -106,18 +112,13 @@ def process_issues_chunk(input_issue_data_for_model, issues_chunk):
         issue_url = issue[4]
         issue_labels = issue[5]
 
-
-        if issue_title is None:
-            issue_title = ""
-        if issue_body is None:
-            issue_body = ""
-
+        issue_title = issue_title or ""
+        issue_body = issue_body or ""
         issue_data_for_model = issue_title + "\n" + issue_body
-
 
         print(f"Process {process_name} is handling issue number {issue_id}")
 
-        duplicatePrediction = DuplicateDetection(input_issue_data_for_model, issue_data_for_model)
+        duplicatePrediction = DuplicateDetection(input_issue_data_for_model, issue_data_for_model, issue_id)
 
         if duplicatePrediction == [1]:
             duplicate_issue_list.append({
@@ -128,6 +129,7 @@ def process_issues_chunk(input_issue_data_for_model, issues_chunk):
                 "issue_label": issue_labels,
             })
     
-        print(f"Process {process_name} processed {len(issues_chunk)} issues in total.")
-        return duplicate_issue_list
+    print(f"Process {process_name} processed {len(issues_chunk)} issues in total.")
+    return duplicate_issue_list  # Return after processing all issues in the chunk
+
         

@@ -34,7 +34,7 @@ def is_table_exists(repo_full_name):
     return result is not None
 
 def insert_issue_to_db(repo_full_name, issue_id, issue_title, issue_body, created_at, issue_url, issue_labels):
-    print(issue_labels)
+    # print(issue_labels)
     conn = connect_db()
     cur = conn.cursor()
 
@@ -80,3 +80,12 @@ def delete_issue_from_db(repo_full_name, issue_id):
         print(f"Error occurred while deleting issue: {e}")
     finally:
         conn.close()
+
+def delete_table(repo_full_name):
+    try:
+        with sqlite3.connect('issues.db') as conn:
+            cursor = conn.cursor()
+            cursor.execute(f"DROP TABLE IF EXISTS {repo_full_name}")
+            print(f"Table for {repo_full_name} deleted.")
+    except Exception as e:
+        print(f"Error deleting table {repo_full_name}: {e}")

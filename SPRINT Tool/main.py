@@ -2,7 +2,7 @@ from flask import Flask, request
 from concurrent.futures import ThreadPoolExecutor
 from processIssueEvents import process_issue_event
 from getAllIssues import fetch_repository_issues
-from dbOperations import insert_issue_to_db
+from dbOperations import insert_issue_to_db, create_table_if_not_exists, delete_table
 import platform
 import multiprocessing
 import torch
@@ -28,20 +28,32 @@ def api_git_msg():
         event = request.headers.get('X-GitHub-Event', '')
         action = data.get('action', '')
 
-        # Get the repository that the app was installed in
         if event == 'installation' and action == 'created':
-            installed_repo = data['repositories']
+            installed_repos = data['repositories']
+            for repo in installed_repos:
+                repo_full_name = repo['full_name']
+                create_table_if_not_exists(repo_full_name)
+                issues_data = fetch_repository_issues(repo_full_name)
+                
+                for issue in issues_data:
+                    issue_id = issue['number']
+                    issue_title = issue['title'] or ""
+                    issue_body = issue['body'] or ""
+                    created_at = issue['created_at']
+                    issue_url = issue['html_url']  
+                    issue_labels = [label['name'] for label in issue.get('labels', [])]
 
-            issues_data = fetch_repository_issues(installed_repo)
-            for issue in issues_data:
-                issue_id = issue['number']
-                issue_title = issue['title'] or ""
-                issue_body = issue['body'] or ""
-                created_at = issue['created_at']
-
-                insert_issue_to_db(repo_full_name, issue_id, issue_title, issue_body, created_at)
+                    insert_issue_to_db(repo_full_name, issue_id, issue_title, issue_body, created_at, issue_url, issue_labels)
             
             return "Installation event handled", 200
+
+        elif event == 'installation' and action == 'deleted':
+            removed_repos = data['repositories']
+            for repo in removed_repos:
+                repo_full_name = repo['full_name']
+                delete_table(repo_full_name)
+            
+            return "Uninstallation event handled, tables deleted", 200
 
         elif event == 'issues':
             repo_full_name = data['repository']['full_name']
@@ -60,7 +72,6 @@ def api_git_msg():
                 'issue_url': issue_url,
                 'issue_labels': issue_labels
             }
-
 
             # Submit the issue processing task to the executor
             executor.submit(process_issue_event, repo_full_name, input_issue, action)

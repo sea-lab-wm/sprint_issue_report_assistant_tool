@@ -83,9 +83,9 @@ def process_issue_event(repo_full_name, input_issue, action):
                 create_comment(repo_full_name, input_issue['issue_number'], duplicate_issue_list)
             
             # Bug localization comment
-            # if code_files:
-            #      buggy_code_files_list = BugLocalization(input_issue_data_for_model, repo_full_name, code_files)
-            #      CreateCommentBL(repo_full_name, input_issue['issue_number'], buggy_code_files_list)
+            if code_files:
+                 buggy_code_files_list = BugLocalization(input_issue_data_for_model, repo_full_name, code_files)
+                 CreateCommentBL(repo_full_name, input_issue['issue_number'], buggy_code_files_list)
         
         elif action == 'deleted':
             delete_issue_from_db(repo_full_name, input_issue['issue_number'])

@@ -127,11 +127,11 @@ def create_or_update_label(repo_full_name, label_name, label_color, auth_token):
 def create_label(repo_full_name, issue_number, label_name, auth_token):
     label_colors = {
         'Duplicate': '33ffa8',  # olive
-        'Blocker': '880808',    # deep red
-        'Critical': 'D22B2B',   # cadmium red 
-        'Major': 'A52A2A',      # brown
-        'Minor': 'CC5500',      # burnt orange
-        'Trivial': 'E97451'     # burnt sienna
+        'Blocker': 'ba4a00',    # deep red
+        'Critical': 'e67e22 ',   # cadmium red 
+        'Major': 'f5b041',      # brown
+        'Minor': 'd4ac0d',      # burnt orange
+        'Trivial': 'f7dc6f'     # burnt sienna
     }
     
 

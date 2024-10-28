@@ -52,7 +52,7 @@ def BugLocalization(issue_data, repo_full_name, code_files_list):
             f"Issue Data: {issue_data}\n\n"
             f"The path list for all the code files are given below: {code_files_list}. "
             "Now based on the issue information and the file paths, find me the potential buggy code files. "
-            "In your response output, only give the paths for the potential buggy code files as a list. Make sure to give the full path (as given in url). "
+            "In your response output, only give the paths for the potential buggy code files as a list. Make sure to give the exact path as given in the input. "
             "Don't give anything else in output."
         )
 

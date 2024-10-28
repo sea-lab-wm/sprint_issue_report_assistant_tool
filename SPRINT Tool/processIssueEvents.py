@@ -40,7 +40,7 @@ def process_issue_event(repo_full_name, input_issue, action):
                 issues_data = fetch_all_bug_reports_from_db(repo_full_name)
 
 
-            code_files = fetch_all_code_files(repo_full_name)
+            code_files = fetch_all_code_files(repo_full_name, input_issue['issue_branch'])
 
             input_issue_title = input_issue['issue_title'] or ""
             input_issue_body = input_issue['issue_body'] or ""

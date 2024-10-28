@@ -63,6 +63,7 @@ def api_git_msg():
             issue_creation_time = data['issue']['created_at']  
             issue_url = data['issue']['html_url']
             issue_labels = [label['name'] for label in data['issue'].get('labels', [])]
+            default_branch = data['repository'].get('default_branch', 'main')
 
             input_issue = {
                 'issue_number': issue_number,
@@ -70,7 +71,8 @@ def api_git_msg():
                 'issue_body': issue_body,
                 'created_at': issue_creation_time,
                 'issue_url': issue_url,
-                'issue_labels': issue_labels
+                'issue_labels': issue_labels,
+                'issue_branch': default_branch
             }
 
             # Submit the issue processing task to the executor

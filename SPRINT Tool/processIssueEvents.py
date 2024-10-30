@@ -87,7 +87,7 @@ def process_issue_event(repo_full_name, input_issue, action):
             # Bug localization comment
             if paths_only:
                 buggy_code_files_list = BugLocalization(input_issue_data_for_model, repo_full_name, paths_only)
-                CreateCommentBL(repo_full_name, input_issue['issue_number'], buggy_code_files_list)
+                CreateCommentBL(repo_full_name, input_issue['issue_branch'], input_issue['issue_number'], buggy_code_files_list)
         
         elif action == 'deleted':
             delete_issue_from_db(repo_full_name, input_issue['issue_number'])

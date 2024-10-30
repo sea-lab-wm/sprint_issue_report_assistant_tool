@@ -51,8 +51,8 @@ def BugLocalization(issue_data, repo_full_name, code_files_list):
             f"I have the following issue information for repository {repo_full_name}: "
             f"Issue Data: {issue_data}\n\n"
             f"The path list for all the code files are given below: {code_files_list}. "
-            "Now based on the issue information and the file paths, find me the potential buggy code files. "
-            "In your response output, only give the paths for the top 5-6 most potential buggy code files as a list. Make sure to give the exact path as given in the input. "
+            "Now based on the issue information and the file paths, find me the path of the potential code files that may contain the bug. "
+            "In your response output, only give the paths for the top 5-6 most potential buggy code files in an unordered list of type *. Make sure to give the exact path as given in the input. "
             "Don't give anything else in output."
         )
 
@@ -65,23 +65,18 @@ def BugLocalization(issue_data, repo_full_name, code_files_list):
         generated_only = generated_text.split("[/INST]")[-1].strip()
         print(generated_only)
         
-        list_pattern = r'\[.*?\]'
-        match = re.search(list_pattern, generated_only)
 
-        if match:
-            list_str = match.group()  
-            try:
-                generated_list = ast.literal_eval(list_str)
-                if isinstance(generated_list, list):
-                    print("Converted list:", generated_list)
-                    return generated_list
-                else:
-                    print("The extracted part is not a list.")
-                    return []
-            except (ValueError, SyntaxError) as e:
-                 print("Error converting the string to a list:", e)
+        file_path_pattern = r'\* (.*?\.java)'
+
+        file_paths = re.findall(file_path_pattern, generated_only)
+
+
+        if file_paths:
+            print("Extracted file paths:", file_paths)
+            return file_paths
         else:
-            print("No list found in the generated output.")
+            print("No file paths found. Returning entire prompt as output.")
+            return generated_only
 
     except Exception as e:
         print(f"An error occurred: {str(e)}")
@@ -89,6 +84,4 @@ def BugLocalization(issue_data, repo_full_name, code_files_list):
 
 
 # sudo apt remove python3-pip
-# sudo apt install python3-pip
-
-
+# sudo apt install python3-pi

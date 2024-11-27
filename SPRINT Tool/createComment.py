@@ -45,6 +45,7 @@ def create_comment(repo_full_name, issue_number, comment_text):
 
 def create_similarity_string(duplicateIssues):
     similarity_string = "## 🎯 Similar Issues:\n"
+    similarity_string += "The following issues are potentially similar to the given issue:\n\n"
 
     for idx, result in enumerate(duplicateIssues, start=1):
         issue_id = result['issue_id']
@@ -141,13 +142,28 @@ def create_label(repo_full_name, issue_number, label_name, auth_token):
     add_label_to_issue(repo_full_name, issue_number, label_name, auth_token)
 
 
+def DupStartingCommentForWaiting(repo_full_name, issue_number):
+    url = f'https://api.github.com/repos/{repo_full_name}/issues/{issue_number}/comments'
+    auth_token = authenticate_github_app(repo_full_name)
 
-    # ⚠️<b>(<span style='color: red;'>{issue_label_str}</span>)</b>⚠️
+    headers = {
+        'Authorization': f'token {auth_token}',
+        'Accept': 'application/vnd.github.v3+json'
+    }
 
+    comment_body = (
+        "## ⏳ **Please hang on a little!**\n\n"
+        "**SPRINT** is analyzing your issue and will provide the list of potential similar issues soon\n\n"
+    )
 
+    payload = {
+        'body': comment_body
+    }
 
-# similarity_string += (
-#             f"🔗 **(#{issue_id}) "
-#             f"[{issue_title}]({issue_url})** &nbsp;&nbsp;&nbsp; **{issue_label_str}**\n\n"
-#             "---\n"  # Horizontal line to separate each issue visually
-#         )
+    response = requests.post(url, headers=headers, json=payload)
+    response.raise_for_status()
+
+    if response.status_code == 201:
+        print("Waiting comment created successfully.")
+    else:
+        print(response.text)

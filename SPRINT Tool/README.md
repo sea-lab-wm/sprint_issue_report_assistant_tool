@@ -1,4 +1,4 @@
-BEE_v2 tool for bug report duplicate detection, severity prediction and bug localization
+SPRINT tool for bug report duplicate detection, severity prediction and bug localization
 
 ## Download the Models 
 [models](https://drive.google.com/drive/folders/1IQdWRwUKVGmU-8p4PNbWd4vTxIAuaoNY?usp=sharing)

@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo.png" alt="SPRINT Logo" />
+  <img src="assets/logo.PNG" alt="SPRINT Logo" />
 </p>
 
 <h1 align="center">SPRINT (iSsue rePoRt assIstaNT)</h1>

@@ -132,6 +132,6 @@ def process_issues_chunk(input_issue_data_for_model, issues_chunk):
             })
     
     print(f"Process {process_name} processed {len(issues_chunk)} issues in total.")
-    return duplicate_issue_list  # Return after processing all issues in the chunk
+    return duplicate_issue_list  
 
         

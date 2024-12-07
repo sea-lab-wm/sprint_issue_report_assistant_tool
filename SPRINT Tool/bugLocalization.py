@@ -60,8 +60,6 @@ def BugLocalization(issue_data, repo_full_name, code_files_list):
         pipe = pipeline(task="text-generation", model=model, tokenizer=tokenizer, max_length=2048)
         result = pipe(f"<s>[INST] {prompt} [/INST]")
         generated_text = result[0]['generated_text']
-        print('------------------------')
-        print('ekhan theka prompt response')
         generated_only = generated_text.split("[/INST]")[-1].strip()
         print(generated_only)
         
@@ -83,5 +81,3 @@ def BugLocalization(issue_data, repo_full_name, code_files_list):
         return None
 
 
-# sudo apt remove python3-pip
-# sudo apt install python3-pi

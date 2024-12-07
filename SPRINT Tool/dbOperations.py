@@ -34,7 +34,6 @@ def is_table_exists(repo_full_name):
     return result is not None
 
 def insert_issue_to_db(repo_full_name, issue_id, issue_title, issue_body, created_at, issue_url, issue_labels):
-    # print(issue_labels)
     conn = connect_db()
     cur = conn.cursor()
 

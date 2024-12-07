@@ -48,7 +48,6 @@ def get_installation_id(repo_full_name, jwt_token):
             'Accept': 'application/vnd.github.v3+json'
         }
         response = requests.get(url, headers=headers)
-        # print(f"Response from get_installation_id: {response.status_code} - {response.text}")
         response.raise_for_status()
         return response.json()['id']
     except requests.exceptions.RequestException as e:
@@ -67,7 +66,6 @@ def get_installation_access_token(installation_id, jwt_token):
             'Accept': 'application/vnd.github.v3+json'
         }
         response = requests.post(url, headers=headers)
-        # print(f"Response from get_installation_access_token: {response.status_code} - {response.text}")
         response.raise_for_status()
         return response.json()['token']
     except requests.exceptions.RequestException as e:

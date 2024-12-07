@@ -33,7 +33,6 @@ def create_comment(repo_full_name, issue_number, comment_text):
     
 
     create_label(repo_full_name, issue_number, "Duplicate", auth_token)
-    # create_label(repo_full_name, issue_number, BRSeverity, auth_token)
 
 
     if response.status_code == 201:

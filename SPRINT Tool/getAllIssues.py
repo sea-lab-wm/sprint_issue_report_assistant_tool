@@ -16,7 +16,6 @@ def fetch_repository_issues(repo_full_name):
     max_pages = 100  
 
     while page <= max_pages: 
-        # Add pagination parameters to the request
         params = {
             'page': page,
             'per_page': per_page
@@ -32,7 +31,6 @@ def fetch_repository_issues(repo_full_name):
         if response.status_code == 200:
             issues_page_data = response.json()
             
-            # Break if no more issues are returned
             if not issues_page_data:
                 print(f"Fetched all issues. Total issues fetched: {len(issues_data)}")
                 break

@@ -29,7 +29,6 @@ def CreateCommentBL(repo_full_name, issue_branch, issue_number, code_files):
             return
 
 
-        # Format the list of code files into markdown
         formatted_code_files = ""
         for idx, file_path in enumerate(filtered_code_files, start=1):
             file_name = file_path.split('/')[-1]
@@ -44,7 +43,6 @@ def CreateCommentBL(repo_full_name, issue_branch, issue_number, code_files):
         print("Invalid type for code_files. Must be a list or string.")
         return
 
-    # Prepare the payload and post the comment
     payload = {
         'body': comment_body
     }

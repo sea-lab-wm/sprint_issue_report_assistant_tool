@@ -12,9 +12,8 @@ def fetch_all_code_files(repo_full_name, branch='main'):
         }
 
         response = requests.get(url, headers=headers)
-        response.raise_for_status()  # Raises HTTPError for bad responses (4xx or 5xx)
+        response.raise_for_status()  
 
-        # Parse JSON and get the 'tree' data
         tree_data = response.json().get('tree', [])
 
         code_files = []

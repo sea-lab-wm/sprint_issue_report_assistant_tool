@@ -1,7 +1,6 @@
 import os
 import torch
 import re
-import ast
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
@@ -11,11 +10,15 @@ from transformers import (
 from datasets import load_dataset
 from peft import PeftConfig, PeftModel
 from trl import SFTTrainer
+from dotenv import load_dotenv
+
+load_dotenv()
+
+BUGLOCALIZATION_MODEL_PATH = os.getenv("BUGLOCALIZATION_MODEL_PATH")
 
 def BugLocalization(issue_data, repo_full_name, code_files_list):
     try:
-        peft_model_id = './Llama-2-7b-chat-finetune'
-        base_model_name = 'NousResearch/Llama-2-7b-chat-hf'
+        peft_model_id = BUGLOCALIZATION_MODEL_PATH
         config = PeftConfig.from_pretrained(peft_model_id) 
 
         use_nested_quant = False

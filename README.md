@@ -84,56 +84,61 @@ We are more than happy to receive your contributions (any kind of contributions)
 
 ---
   
-## How do I customize and run SPRINT on my machine?
-SPRINT tool for bug report duplicate detection, severity prediction and bug localization
-
-### Download the Models 
-[models](https://drive.google.com/drive/folders/1IQdWRwUKVGmU-8p4PNbWd4vTxIAuaoNY?usp=sharing)
-
+## How do I customize and run SPRINT on my server?
+SPRINT is a tool for bug report duplicate detection, severity prediction and bug localization. A user can run SPRINT and customize it by following the instructions given below. We have also made our .env file public so that users can get an idea of which variable names to use and which values are required in those variables.
 
 **Step 1:** 
 
 Clone the repository 
 
+**Step 2:** 
 
-**Step 2:**
+- Download the Models 
+
+You can download our fine-tuned models for the 3 features from here: [models](https://drive.google.com/drive/folders/1IQdWRwUKVGmU-8p4PNbWd4vTxIAuaoNY?usp=sharing). 
+
+After downloading, put them in your preferable location and add the location path in the `.env` file. [n.b: add model paths for each of the 3 features in the `.env` file in variables ''DUPLICATE_BR_MODEL_PATH', 'SEVERITY_PREDICTION_MODEL_PATH', 'BUGLOCALIZATION_MODEL_PATH']
+
+You can also use your own fine-tuned models. You just need to add your model path in the `.env` file.
+
+
+**Step 3:**
 
 Install ngrok from (https://ngrok.com/download) [This will create a secure tunnel from a public endpoint (Github repository) to a locally running network service (our project running in localhost)]
 
 
-**Step 3:** 
+**Step 4:** 
 
-Generate a private access token (this token will enable permission for our tool to fetch and post data to a user’s Github repositories). Make sure in ‘Repository Permissions’ section, there is Read and Write access to ‘Actions’, ‘Webhooks’ and ‘Issues’.
+Generate a private access token (this token will enable permission for SPRINT to fetch and post data to a user’s Github repositories). Make sure in ‘Repository Permissions’ section, there is Read and Write access to ‘Actions’, ‘Webhooks’ and ‘Issues’.
 
    `Profile -> Settings -> Developer Settings -> Personal Access Tokens -> Fine-grained Tokens -> Generate New Token`
 
-After generating the token, copy and paste it to the cloned project’s `.env` file
-(in GITHUB_PRIVATE_KEY variable)
-
-
-**Step 4:**
-
-Open the cloned project in IDE and run the following 2 commands in 2 different terminals -
-
-`./ngrok http 5000`
-
-`python main.py`
-
+After generating the token, copy and paste it to the cloned project’s `.env` file's 'GITHUB_PRIVATE_KEY' variable
 
 
 **Step 5:**
+
+Open the cloned project in IDE and run the following 2 commands in 2 different terminals -
+
+`ngrok http 5000`
+
+`python main.py` or `python -m main`
+
+
+
+**Step 6:**
 
 Go to the repository where you need to run the tool. Go to -
 
 `Settings -> Webhooks -> Add Webhook `
 
-Then copy the forwarding address shown after running the command `./ngrok http 5000`  into the Payload URL section of Add Webhook. 
+Then copy the forwarding address shown after running the command `ngrok http 5000`  into the Payload URL section of Add Webhook. 
 
 
 Make sure ‘Which events would you like to trigger this webhook?’ section has ‘Issues’, ‘Issue Comments’ and ‘Labels’ checkboxes checked
 
 
-**Step 6:**
+**Step 7:**
 
 Create issues in that repository and see SPRINT work
 

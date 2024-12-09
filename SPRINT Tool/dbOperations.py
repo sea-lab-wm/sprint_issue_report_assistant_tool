@@ -53,14 +53,21 @@ def insert_issue_to_db(repo_full_name, issue_id, issue_title, issue_body, create
     print(f'Issue {issue_id} inserted successfully in table {repo_full_name}')
 
 def fetch_all_bug_reports_from_db(repo_full_name):
-    conn = connect_db()
-    cur = conn.cursor()
+    try:
+        conn = connect_db()
+        cur = conn.cursor()
 
-    query = f"SELECT * FROM '{repo_full_name}';"
-    cur.execute(query)
-    issues = cur.fetchall()
-    conn.close()
-    return issues
+        query = f"SELECT * FROM '{repo_full_name}';"
+        cur.execute(query)
+        issues = cur.fetchall()
+        conn.close()
+
+        return issues
+
+    except Exception as e:
+        print(f"An error occurred while fetching bug reports from the database: {str(e)}")
+        return None
+
 
 def delete_issue_from_db(repo_full_name, issue_id):
     conn = connect_db()

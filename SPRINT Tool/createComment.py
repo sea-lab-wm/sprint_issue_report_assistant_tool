@@ -44,7 +44,7 @@ def create_comment(repo_full_name, issue_number, comment_text):
 
 def create_similarity_string(duplicateIssues):
     similarity_string = "## 🎯 Similar Issues:\n"
-    similarity_string += "The following issues are potentially similar to the given issue:\n\n"
+    similarity_string += "**The following issues are potentially similar to the given issue:**\n\n"
 
     for idx, result in enumerate(duplicateIssues, start=1):
         issue_id = result['issue_id']
@@ -59,7 +59,7 @@ def create_similarity_string(duplicateIssues):
             issue_label_str_values = ', '.join(filtered_labels)
             issue_label_str = f"<b>({issue_label_str_values})</b>"
         else:
-            issue_label_str = " <b>(No Label found)</b>"
+            issue_label_str = ""
 
         similarity_string += (
             f"### "

@@ -14,12 +14,15 @@ def generate_jwt():
         exp = iat + 60 * 10
         iss = os.environ.get('GITHUB_APP_ID')
 
-        with open('sprint-issue-report-assistant.2024-07-08.private-key.pem', 'rb') as key_file:
-            private_key = serialization.load_pem_private_key(
-                key_file.read(),
-                password=None,
-                backend=default_backend()
-            )
+        private_key_str = os.environ.get('GITHUB_PRIVATE_KEY')
+        if not private_key_str:
+            raise ValueError("GITHUB_PRIVATE_KEY is not set in the .env file.")
+
+        private_key = serialization.load_pem_private_key(
+            private_key_str.encode('utf-8'),
+            password=None,
+            backend=default_backend()
+        )
 
         payload = {
             "iat": iat,
@@ -27,10 +30,8 @@ def generate_jwt():
             "iss": iss
         }
 
-        # Encode JWT
         token = jwt.encode(payload, private_key, algorithm="RS256")
 
-        # Decode the token if it is in bytes
         if isinstance(token, bytes):
             token = token.decode('utf-8')
 

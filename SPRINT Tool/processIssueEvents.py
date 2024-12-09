@@ -2,8 +2,8 @@ from getAllIssues import fetch_repository_issues
 from getCodeFiles import fetch_all_code_files
 from dupBRDetection import DuplicateDetection
 from BRSeverityPred import SeverityPrediction
-from createCommentBugLocalization import CreateCommentBL
-from createComment import create_comment
+from createCommentBugLocalization import CreateCommentBL, BLStartingCommentForWaiting
+from createComment import create_comment, DupStartingCommentForWaiting
 import multiprocessing
 from functools import partial
 from app_authentication import authenticate_github_app
@@ -19,6 +19,8 @@ def process_issue_event(repo_full_name, input_issue, action):
                 create_table_if_not_exists(repo_full_name)
 
                 issues_data = fetch_repository_issues(repo_full_name)
+                print('================')
+                print(issues_data)
                 for issue in issues_data:
 
                     if issue['number'] == input_issue['issue_number']:
@@ -34,10 +36,17 @@ def process_issue_event(repo_full_name, input_issue, action):
 
                     insert_issue_to_db(repo_full_name, issue_id, issue_title, issue_body, created_at, issue_url, issue_labels)
                 issues_data = fetch_all_bug_reports_from_db(repo_full_name)
+                print(issues_data)
+                if issues_data:
+                    DupStartingCommentForWaiting(repo_full_name, input_issue['issue_number'])
 
             else:
                 print(f"Table for {repo_full_name} already exists. Fetching issues from the database.")
                 issues_data = fetch_all_bug_reports_from_db(repo_full_name)
+                print('=================')
+                print(issues_data)
+                if issues_data:
+                    DupStartingCommentForWaiting(repo_full_name, input_issue['issue_number'])
 
 
             code_files = fetch_all_code_files(repo_full_name, input_issue['issue_branch'])
@@ -78,16 +87,18 @@ def process_issue_event(repo_full_name, input_issue, action):
             BRSeverity = SeverityPrediction(input_issue_data_for_model)
             create_label(repo_full_name, input_issue['issue_number'], BRSeverity, auth_token)
 
-            # Duplicate detection comment
             if duplicate_issue_list:
+                duplicate_issue_list = duplicate_issue_list[:10]
                 create_comment(repo_full_name, input_issue['issue_number'], duplicate_issue_list)
             
             paths_only = [file['path'] for file in code_files]
 
-            # Bug localization comment
-            if paths_only:
-                buggy_code_files_list = BugLocalization(input_issue_data_for_model, repo_full_name, paths_only)
-                CreateCommentBL(repo_full_name, input_issue['issue_branch'], input_issue['issue_number'], buggy_code_files_list)
+            # # Bug localization comment
+            # if paths_only:
+            #     BLStartingCommentForWaiting(repo_full_name, input_issue['issue_number'])
+            #     buggy_code_files_list = BugLocalization(input_issue_data_for_model, repo_full_name, paths_only)
+            #     print(input_issue['issue_branch'])
+            #     CreateCommentBL(repo_full_name, input_issue['issue_branch'], input_issue['issue_number'], buggy_code_files_list, paths_only)
         
         elif action == 'deleted':
             delete_issue_from_db(repo_full_name, input_issue['issue_number'])
@@ -133,5 +144,3 @@ def process_issues_chunk(input_issue_data_for_model, issues_chunk):
     
     print(f"Process {process_name} processed {len(issues_chunk)} issues in total.")
     return duplicate_issue_list  
-
-        

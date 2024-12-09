@@ -1,11 +1,15 @@
+import os
 from flask import Flask, request
 from concurrent.futures import ThreadPoolExecutor
+from dotenv import load_dotenv
 from processIssueEvents import process_issue_event
 from getAllIssues import fetch_repository_issues
 from dbOperations import insert_issue_to_db, create_table_if_not_exists, delete_table
 import platform
 import multiprocessing
 import torch
+
+load_dotenv()
 
 
 cuda_available = torch.cuda.is_available()
@@ -18,7 +22,9 @@ elif os_name == 'Windows':
     multiprocessing.set_start_method('spawn', force=True)
 
 app = Flask(__name__)
-executor = ThreadPoolExecutor(max_workers=4)  
+
+max_workers = int(os.environ.get('POOL_PROCESSOR_MAX_WORKERS', 4)) # setting default pool processor count to 4
+executor = ThreadPoolExecutor(max_workers=max_workers)
 
 
 @app.route('/', methods=['POST'])
@@ -75,7 +81,6 @@ def api_git_msg():
                 'issue_branch': default_branch
             }
 
-            # Submit the issue processing task to the executor
             executor.submit(process_issue_event, repo_full_name, input_issue, action)
 
             return "Issue event handled", 200

@@ -97,9 +97,11 @@ Clone the repository
 
 You can download our fine-tuned models for the 3 features from here: [models](https://drive.google.com/drive/folders/1IQdWRwUKVGmU-8p4PNbWd4vTxIAuaoNY?usp=sharing). 
 
-After downloading, put them in your preferable location and add the location path in the `.env` file. [n.b: add model paths for each of the 3 features in the `.env` file in variables ''DUPLICATE_BR_MODEL_PATH', 'SEVERITY_PREDICTION_MODEL_PATH', 'BUGLOCALIZATION_MODEL_PATH']
+After downloading, put them in your preferable location and add the location path in the `.env` file. Add model paths for each of the 3 features in the `.env` file in variables ''DUPLICATE_BR_MODEL_PATH', 'SEVERITY_PREDICTION_MODEL_PATH', 'BUGLOCALIZATION_MODEL_PATH'
 
 You can also use your own fine-tuned models. You just need to add your model path in the `.env` file.
+
+[n.b. - The bug localization model (Llama-7b-chat-finetune) requires a GPU to run]
 
 
 **Step 3:**

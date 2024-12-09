@@ -1,5 +1,5 @@
-import requests, os, time
-from app_authentication import authenticate_github_app
+import requests, time
+from GitHub_Event_Handler.app_authentication import authenticate_github_app
 
 # Function to fetch issues from a GitHub repository with page-based indexing
 def fetch_repository_issues(repo_full_name):

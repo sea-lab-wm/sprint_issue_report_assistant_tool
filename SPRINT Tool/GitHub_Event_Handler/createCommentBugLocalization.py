@@ -1,7 +1,6 @@
-import os
 import requests
 from dotenv import load_dotenv
-from app_authentication import authenticate_github_app
+from .app_authentication import authenticate_github_app
 
 
 def CreateCommentBL(repo_full_name, issue_branch, issue_number, code_files, paths_only):

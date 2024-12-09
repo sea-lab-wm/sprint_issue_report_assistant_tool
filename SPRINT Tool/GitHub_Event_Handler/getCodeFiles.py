@@ -1,5 +1,5 @@
 import requests
-from app_authentication import authenticate_github_app
+from .app_authentication import authenticate_github_app
 
 def fetch_all_code_files(repo_full_name, branch='main'):
     try:

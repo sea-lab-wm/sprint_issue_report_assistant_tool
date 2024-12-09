@@ -2,9 +2,9 @@ import os
 from flask import Flask, request
 from concurrent.futures import ThreadPoolExecutor
 from dotenv import load_dotenv
-from processIssueEvents import process_issue_event
-from getAllIssues import fetch_repository_issues
-from dbOperations import insert_issue_to_db, create_table_if_not_exists, delete_table
+from GitHub_Event_Handler.processIssueEvents import process_issue_event
+from Issue_Indexer.getAllIssues import fetch_repository_issues
+from Data_Storage.dbOperations import insert_issue_to_db, create_table_if_not_exists, delete_table
 import platform
 import multiprocessing
 import torch

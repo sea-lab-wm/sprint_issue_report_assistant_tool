@@ -1,7 +1,6 @@
-import os
 import requests
 from dotenv import load_dotenv
-from app_authentication import authenticate_github_app
+from .app_authentication import authenticate_github_app
 
 load_dotenv()
 

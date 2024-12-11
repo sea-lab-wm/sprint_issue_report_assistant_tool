@@ -1,6 +1,6 @@
 ## SPRINT's User Study
 
-We conducted an user-study to evaluate SPRINT's usability and usefulness with 5 professonal developers from Samsung R&D Institute Bangladesh who are experienced in Issue management tasks with GitHub. The survey questionnaire is available [Here](https://wmsas.qualtrics.com/jfe/form/SV_3fMAo8HHpwN8bjw).
+We conducted an user-study to evaluate SPRINT's usability and usefulness with 5 professonal developers from Samsung R&D Institute Bangladesh who are experienced in Issue management tasks with GitHub. The survey questionnaire is available at **SPRINT_User_Study_survey_msr25.pdf**.
 
 We are including our survey responses in the SPRINT_User_Study.Responses.xlsx file.
 

@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo.PNG" alt="SPRINT Logo" />
+  <img src="../assets/logo.PNG" alt="SPRINT Logo" />
 </p>
 
 <h1 align="center">SPRINT (iSsue rePoRt assIstaNT)</h1>
@@ -24,7 +24,7 @@ SPRINT can be installed as a GitHub app on any GitHub repository. The installati
 ## SPRINT in Action:
 
 <p align="center">
-  <img src="assets/ui_sprint.png" alt="SPRINT UI" style="width:80%;" />
+  <img src="../assets/ui_sprint.png" alt="SPRINT UI" style="width:80%;" />
 </p>
 
 When a new issue is reported, SPRINT fetches that issue and analyzes it. After analysis, SPRINT generates comments and labels for its three features:
@@ -52,7 +52,7 @@ When a new issue is reported, SPRINT fetches that issue and analyzes it. After a
 SPRINT is implemented using Python's Flask framework under the following architecture:  
 
 <p align="center">
-  <img src="assets/architecture.png" alt="SPRINT Architecture" />
+  <img src="../assets/architecture.png" alt="SPRINT Architecture" />
 </p>
 
 
@@ -113,7 +113,7 @@ After generating the token, copy and paste it to the cloned project’s `.env` f
 
 **Step 4:**
 
-Open the cloned project in IDE and run the following 2 commands in 2 different terminals -
+Open the cloned project in IDE and install the required dependencies. You can use our [requirements.txt](../requirements.txt) file for this. Then, run the following 2 commands in 2 different terminals -
 
 `./ngrok http 5000`
 

@@ -120,7 +120,7 @@ After generating the token, copy and paste it to the cloned project’s `.env` f
 
 **Step 5:**
 
-Open the cloned project in IDE and install the required dependencies. You can use our [requirements.txt](requirements.txt) file for this. Then, run the following 2 commands in 2 different terminals -
+Open the cloned project in IDE and install the required dependencies. You can use our [requirements.txt](https://github.com/sea-lab-wm/sprint_issue_report_assistant_tool/blob/main/SPRINT%20Tool/requirements.txt) file for this. Then, run the following 2 commands in 2 different terminals -
 
 `ngrok http 5000`
 

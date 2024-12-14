@@ -111,11 +111,12 @@ Install ngrok from (https://ngrok.com/download) [This will create a secure tunne
 
 **Step 4:** 
 
-Generate a private access token (this token will enable permission for SPRINT to fetch and post data to a user’s Github repositories). Make sure in ‘Repository Permissions’ section, there is Read and Write access to ‘Actions’, ‘Webhooks’ and ‘Issues’.
+Create a new GitHub application. You need to go to the following path:
 
-   `Profile -> Settings -> Developer Settings -> Personal Access Tokens -> Fine-grained Tokens -> Generate New Token`
+   `Settings -> Developer's Settings -> New GitHub App`
 
-After generating the token, copy and paste it to the cloned project’s `.env` file's 'GITHUB_PRIVATE_KEY' variable
+Make sure in ‘Repository Permissions’ section of the GitHub application, there is Read and Write access to ‘Actions’, ‘Webhooks’ and ‘Issues’. After saving the GitHub application, there will be an option to Generate a private access token (this token will enable permission for SPRINT to fetch and post data to a user’s Github repositories). Generate this token and then copy and paste app id, client id, and github private access token/private key to the `.env` file of the cloned code.
+
 
 
 **Step 5:**
@@ -134,7 +135,7 @@ Go to the repository where you need to run the tool. Go to -
 
 `Settings -> Webhooks -> Add Webhook `
 
-Then copy the forwarding address shown after running the command `ngrok http 5000`  into the Payload URL section of Add Webhook. 
+Then copy the forwarding address shown after running the command `ngrok http 5000` or `./ngrok http 5000` (if ngrok.exe is in your SPRINT Tool folder)  into the Payload URL section of Add Webhook. 
 
 
 Make sure ‘Which events would you like to trigger this webhook?’ section has ‘Issues’, ‘Issue Comments’ and ‘Labels’ checkboxes checked

@@ -95,3 +95,4 @@ if __name__ == '__main__':
 
 
 # https://github.com/apps/sprint-issue-report-assistant
+# https://github.com/apps/issue-plugin

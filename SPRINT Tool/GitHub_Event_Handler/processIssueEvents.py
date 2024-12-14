@@ -88,11 +88,11 @@ def process_issue_event(repo_full_name, input_issue, action):
             
             paths_only = [file['path'] for file in code_files]
 
-            # Bug localization 
-            if paths_only:
-                BLStartingCommentForWaiting(repo_full_name, input_issue['issue_number'])
-                buggy_code_files_list = BugLocalization(input_issue_data_for_model, repo_full_name, paths_only)
-                CreateCommentBL(repo_full_name, input_issue['issue_branch'], input_issue['issue_number'], buggy_code_files_list, paths_only)
+            # # Bug localization 
+            # if paths_only:
+            #     BLStartingCommentForWaiting(repo_full_name, input_issue['issue_number'])
+            #     buggy_code_files_list = BugLocalization(input_issue_data_for_model, repo_full_name, paths_only)
+            #     CreateCommentBL(repo_full_name, input_issue['issue_branch'], input_issue['issue_number'], buggy_code_files_list, paths_only)
         
         elif action == 'deleted':
             delete_issue_from_db(repo_full_name, input_issue['issue_number'])

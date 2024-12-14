@@ -101,7 +101,7 @@ After downloading, put them in your preferable location and add the location pat
 
 You can also use your own fine-tuned models. You just need to add your model path in the `.env` file.
 
-[n.b. - The bug localization model (Llama-7b-chat-finetune) requires a GPU to run]
+[n.b. - The bug localization model (Llama-7b-chat-finetune) requires a GPU of the ampere family to load the shards to run, the entire project and the models require about 20gb of space]
 
 
 **Step 3:**

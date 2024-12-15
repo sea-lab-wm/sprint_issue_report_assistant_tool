@@ -93,7 +93,7 @@ Clone the repository
 
 **Step 2:** 
 
-- Download the Models 
+Download the Models 
 
 You can download our fine-tuned models for the 3 features from here: [models](https://drive.google.com/drive/folders/1IQdWRwUKVGmU-8p4PNbWd4vTxIAuaoNY?usp=sharing). 
 

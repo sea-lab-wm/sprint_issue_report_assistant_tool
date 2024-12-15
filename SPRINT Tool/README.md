@@ -115,21 +115,17 @@ Create a new GitHub application. You need to go to the following path:
 Make sure in ‘Repository Permissions’ section of the GitHub application, there is Read and Write access to ‘Actions’, ‘Webhooks’ and ‘Issues’. After saving the GitHub application, there will be an option to Generate a private access token (this token will enable permission for SPRINT to fetch and post data to a user’s Github repositories). Generate this token and then copy and paste app id, client id, and github private access token/private key to the `.env` file of the cloned code.
 
 
-
 **Step 5:**  
 
-Open the cloned project in IDE and install the required dependencies. You can use our [requirements.txt](https://github.com/sea-lab-wm/sprint_issue_report_assistant_tool/blob/main/SPRINT%20Tool/requirements.txt) file for this. Then, run the following commands in **two different terminals**:
-
-In the first terminal:  
+Open the cloned project in IDE and install the required dependencies. You can use our [requirements.txt](https://github.com/sea-lab-wm/sprint_issue_report_assistant_tool/blob/main/SPRINT%20Tool/requirements.txt) file for this. Then, run the following 2 commands in 2 different terminals:  
 
 ```bash
 ngrok http 5000
 
-```bash
+python main.py
+# or
 python -m main
-or,
-python3 main.py
-
+```
 
 
 **Step 6:**

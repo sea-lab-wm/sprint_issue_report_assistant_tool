@@ -116,13 +116,19 @@ Make sure in ‘Repository Permissions’ section of the GitHub application, the
 
 
 
-**Step 5:**
+**Step 5:**  
 
-Open the cloned project in IDE and install the required dependencies. You can use our [requirements.txt](https://github.com/sea-lab-wm/sprint_issue_report_assistant_tool/blob/main/SPRINT%20Tool/requirements.txt) file for this. Then, run the following 2 commands in 2 different terminals -
+Open the cloned project in IDE and install the required dependencies. You can use our [requirements.txt](https://github.com/sea-lab-wm/sprint_issue_report_assistant_tool/blob/main/SPRINT%20Tool/requirements.txt) file for this. Then, run the following commands in **two different terminals**:
 
-`ngrok http 5000`
+In the first terminal:  
 
-`python main.py` or `python -m main`
+```bash
+ngrok http 5000
+
+```bash
+python -m main
+or,
+python3 main.py
 
 
 

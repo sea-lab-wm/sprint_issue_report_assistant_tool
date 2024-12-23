@@ -21,6 +21,26 @@ SPRINT can be installed as a GitHub app on any GitHub repository. The installati
 
 ---
 
+## About this Repository
+
+This repository hosts the code, resources, and supporting materials for the **SPRINT Tool**. It is organized into the following folders:
+
+### Replication Package
+This folder contains all materials necessary to replicate the experiments, evaluations, and studies conducted for SPRINT. It is further divided into the following subfolders:
+- **Evaluation**: Includes model fine-tuning scripts, evaluation guidelines, and results for the three main features of SPRINT.
+- **SPRINT Test Cases**: Provides sample test cases to test the three features of SPRINT.
+- **User Study**: Contains the user study questionnaire and survey results related to SPRINT.
+
+### SPRINT Tool
+This folder contains the core codebase for the SPRINT tool. The accompanying `README.md` file provides detailed instructions on how to run and customize SPRINT to suit your requirements.
+
+### assets
+This folder holds images and other utility files used throughout the repository, including visuals for documentation purposes.
+
+Feel free to explore these folders for a comprehensive understanding of SPRINT and its functionality.
+
+---
+
 ## SPRINT in Action:
 
 <p align="center">
@@ -97,7 +117,7 @@ Download the Models
 
 You can download our fine-tuned models for the 3 features from here: [models](https://drive.google.com/drive/folders/1IQdWRwUKVGmU-8p4PNbWd4vTxIAuaoNY?usp=sharing). 
 
-After downloading, put them in your preferable location and add the location path in the `.env` file. Add model paths for each of the 3 features in the `.env` file in variables ''DUPLICATE_BR_MODEL_PATH', 'SEVERITY_PREDICTION_MODEL_PATH', 'BUGLOCALIZATION_MODEL_PATH'
+After downloading, put them in your preferable location and add the location path (the path of the downloaded folders with feature names; e.g. 'modelDupBr', 'modelPrioritySeverity') in the `.env` file. Add model paths for each of the 3 features in the `.env` file in variables ''DUPLICATE_BR_MODEL_PATH', 'SEVERITY_PREDICTION_MODEL_PATH', 'BUGLOCALIZATION_MODEL_PATH'.
 
 You can also use your own fine-tuned models. You just need to add your model path in the `.env` file.
 

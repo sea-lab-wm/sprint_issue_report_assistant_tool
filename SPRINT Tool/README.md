@@ -21,10 +21,30 @@ SPRINT can be installed as a GitHub app on any GitHub repository. The installati
 
 ---
 
+## About this Repository
+
+This repository hosts the code, resources, and supporting materials for the **SPRINT Tool**. It is organized into the following folders:
+
+### Replication Package
+This folder contains all materials necessary to replicate the experiments, evaluations, and studies conducted for SPRINT. It is further divided into the following subfolders:
+- **Evaluation**: Includes model fine-tuning scripts, evaluation guidelines, and results for the three main features of SPRINT.
+- **SPRINT Test Cases**: Provides sample test cases to test the three features of SPRINT.
+- **User Study**: Contains the user study questionnaire and survey results related to SPRINT.
+
+### SPRINT Tool
+This folder contains the core codebase for the SPRINT tool. The accompanying `README.md` file provides detailed instructions on how to run and customize SPRINT to suit your requirements.
+
+### assets
+This folder holds images and other utility files used throughout the repository, including visuals for documentation purposes.
+
+Feel free to explore these folders for a comprehensive understanding of SPRINT and its functionality.
+
+---
+
 ## SPRINT in Action:
 
 <p align="center">
-  <img src="../assets/ui_sprint.png" alt="SPRINT UI" style="width:80%;" />
+  <img src="assets/ui_sprint.png" alt="SPRINT UI" style="width:80%;" />
 </p>
 
 When a new issue is reported, SPRINT fetches that issue and analyzes it. After analysis, SPRINT generates comments and labels for its three features:
@@ -52,7 +72,7 @@ When a new issue is reported, SPRINT fetches that issue and analyzes it. After a
 SPRINT is implemented using Python's Flask framework under the following architecture:  
 
 <p align="center">
-  <img src="../assets/architecture.png" alt="SPRINT Architecture" />
+  <img src="assets/architecture.png" alt="SPRINT Architecture" />
 </p>
 
 
@@ -84,21 +104,24 @@ We are more than happy to receive your contributions (any kind of contributions)
 
 ---
   
-## How do I customize and run SPRINT on my machine?
-SPRINT tool for bug report duplicate detection, severity prediction and bug localization
-
-### Download the Models 
-[models](https://drive.google.com/drive/folders/1IQdWRwUKVGmU-8p4PNbWd4vTxIAuaoNY?usp=sharing)
-
+## How do I customize and run SPRINT on my server?
+SPRINT is a tool for bug report duplicate detection, severity prediction and bug localization. A user can run SPRINT and customize it by following the instructions given below. We have also made our .env file public so that users can get an idea of which variable names to use and which values are required in those variables.
 
 **Step 1:** 
 
 Clone the repository 
 
+**Step 2:** 
 
-**Step 2:**
+Download the Models 
 
-Install ngrok from (https://ngrok.com/download) [This will create a secure tunnel from a public endpoint (Github repository) to a locally running network service (our project running in localhost)]
+You can download our fine-tuned models for the 3 features from here: [models](https://drive.google.com/drive/folders/1IQdWRwUKVGmU-8p4PNbWd4vTxIAuaoNY?usp=sharing). 
+
+After downloading, put them in your preferable location and add the location path (the path of the downloaded folders with feature names; e.g. 'modelDupBr', 'modelPrioritySeverity') in the `.env` file. Add model paths for each of the 3 features in the `.env` file in variables ''DUPLICATE_BR_MODEL_PATH', 'SEVERITY_PREDICTION_MODEL_PATH', 'BUGLOCALIZATION_MODEL_PATH'.
+
+You can also use your own fine-tuned models. You just need to add your model path in the `.env` file.
+
+[n.b. - The bug localization model (Llama-7b-chat-finetune) requires a GPU of the ampere family to load the shards to run, the entire project and the models require about 20gb of space]
 
 
 **Step 3:**
@@ -113,6 +136,7 @@ Create a new GitHub application. You need to go to the following path:
    `Settings -> Developer's Settings -> New GitHub App`
 
 Make sure in ‘Repository Permissions’ section of the GitHub application, there is Read and Write access to ‘Actions’, ‘Webhooks’ and ‘Issues’. After saving the GitHub application, there will be an option to Generate a private access token (this token will enable permission for SPRINT to fetch and post data to a user’s Github repositories). Generate this token and then copy and paste app id, client id, and github private access token/private key to the `.env` file of the cloned code.
+
 
 
 **Step 5:**  
@@ -145,7 +169,6 @@ Make sure ‘Which events would you like to trigger this webhook?’ section has
 Create issues in that repository and see SPRINT work
 
 ---
-
 
 # SPRINT API Documentation
 

@@ -1,4 +1,4 @@
-### Duplicate bug report detection
+### Duplicate Detection
 
 This is the README.md file for replicating the fine-tuning for dup br detection of the RepresentThemAll model. All the credit for the dataset and the model fine-tuning code go to them. We just adjusted some things and replicated their work.
 
@@ -18,18 +18,19 @@ We ran the fine-tuned RTA model on their test dataset and got the following eval
 
 ### Test Data Overview
 
-| Metric                        | Value                                        |
-|--------------------------------|----------------------------------------------|
-| **Number of Test Data**        | 15,510                                       |
-| **Classification Labels**      | Trivial, Minor, Major, Critical, Blocker     |
+| Metric                                         | Value                                        |
+|------------------------------------------------|----------------------------------------------|
+| **Number of Test Data**                        | 15288                                        |
+| **Number of Duplicates in Test Data**          | 9088                                         |
+| **Number of Non-duplicates in Test Data**      | 6200                                         |
 
 ### Evaluation Results
 
 | Metric       | Value     |
 |--------------|-----------|
-| **Accuracy** | 65.5899%  |
-| **Precision**| 66.2795%  |
-| **Recall**   | 65.5899%  |
+| **Accuracy** | 97.31%    |
+| **Precision**| 97.46%    |
+| **Recall**   | 98.86%    |
 
 
 

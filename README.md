@@ -44,7 +44,7 @@ Feel free to explore these folders for a comprehensive understanding of SPRINT a
 ## SPRINT in Action:
 
 <p align="center">
-  <img src="assets/ui_sprint.png" alt="SPRINT UI" style="width:80%;" />
+  <img src="assets/sprint_usage_scenario.png" alt="SPRINT UI" style="width:80%;" />
 </p>
 
 When a new issue is reported, SPRINT fetches that issue and analyzes it. After analysis, SPRINT generates comments and labels for its three features:

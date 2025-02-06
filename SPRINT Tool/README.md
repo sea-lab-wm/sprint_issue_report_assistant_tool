@@ -44,7 +44,7 @@ Feel free to explore these folders for a comprehensive understanding of SPRINT a
 ## SPRINT in Action:
 
 <p align="center">
-  <img src="assets/sprint_usage_scenario.png" alt="SPRINT UI" style="width:80%;" />
+  <img src="../assets/sprint_usage_scenario.png" alt="SPRINT UI" style="width:80%;" />
 </p>
 
 When a new issue is reported, SPRINT fetches that issue and analyzes it. After analysis, SPRINT generates comments and labels for its three features:
@@ -72,7 +72,7 @@ When a new issue is reported, SPRINT fetches that issue and analyzes it. After a
 SPRINT is implemented using Python's Flask framework under the following architecture:  
 
 <p align="center">
-  <img src="assets/architecture.png" alt="SPRINT Architecture" />
+  <img src="../assets/architecture.png" alt="SPRINT Architecture" />
 </p>
 
 
